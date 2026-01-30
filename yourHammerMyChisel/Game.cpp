@@ -1,10 +1,11 @@
 #include "Game.h"
-#include <iostream>
+
 
 Game::Game() :
-	m_window{ sf::VideoMode{ sf::Vector2u{800U, 600U}, 32U }, "SFML Game 3.0" },
+	m_window{ sf::VideoMode{ sf::Vector2u{SCREEN_WIDTH, SCREEN_HEIGHT}, 32U}, "your Hammer my Chisel"},
 	m_DELETEexitGame{false} //when true game will exit
 {
+	m_mask.Start();
 	setupTexts(); // load font 
 	setupSprites(); // load texture
 	setupAudio(); // load sounds
@@ -70,6 +71,7 @@ void Game::checkKeyboardState()
 void Game::update(sf::Time t_deltaTime)
 {
 	checkKeyboardState();
+	m_mask.update();
 	if (m_DELETEexitGame)
 	{
 		m_window.close();
@@ -82,7 +84,8 @@ void Game::render()
 
 	m_window.draw(m_DELETElogoSprite);
 	m_window.draw(m_DELETEwelcomeMessage);
-	
+	m_mask.Render(m_window);
+
 	m_window.display();
 }
 

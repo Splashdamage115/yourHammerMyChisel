@@ -16,8 +16,9 @@
 /// same as #pragma once
 /// Don't forget the #endif at the bottom
 /// </summary>
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#include "Library.h"
+
+#include "Mask.h"
 
 
 const sf::Color ULTRAMARINE{ 5, 55,242,255 }; // const colour
@@ -55,6 +56,7 @@ private:
 	sf::Sound m_DELETEsound{ m_DELETEsoundBuffer }; // sound object to play
 	bool m_DELETEexitGame; // control exiting game
 
+	Mask m_mask;
 };
 
 #pragma warning( pop ) 
