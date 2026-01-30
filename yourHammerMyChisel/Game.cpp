@@ -1,21 +1,6 @@
-/// <summary>
-/// author Pete Lowe May 2025
-/// you need to change the above line or lose marks
-/// </summary>
-
-
 #include "Game.h"
 #include <iostream>
 
-
-
-/// <summary>
-/// default constructor
-/// setup the window properties
-/// load and setup the texts
-/// load and setup the images
-/// load and setup the sounds
-/// </summary>
 Game::Game() :
 	m_window{ sf::VideoMode{ sf::Vector2u{800U, 600U}, 32U }, "SFML Game 3.0" },
 	m_DELETEexitGame{false} //when true game will exit
@@ -25,22 +10,10 @@ Game::Game() :
 	setupAudio(); // load sounds
 }
 
-/// <summary>
-/// default destructor we didn't dynamically allocate anything
-/// so we don't need to free it, but mthod needs to be here
-/// </summary>
 Game::~Game()
 {
 }
 
-
-/// <summary>
-/// main game loop
-/// update 60 times per second,
-/// process update as often as possible and at least 60 times per second
-/// draw as often as possible but only updates are on time
-/// if updates run slow then don't render frames
-/// </summary>
 void Game::run()
 {	
 	sf::Clock clock;
@@ -60,11 +33,7 @@ void Game::run()
 		render(); // as many as possible
 	}
 }
-/// <summary>
-/// handle user and system events/ input
-/// get key presses/ mouse moves etc. from OS
-/// and user :: Don't do game update here
-/// </summary>
+
 void Game::processEvents()
 {
 	
@@ -81,11 +50,6 @@ void Game::processEvents()
 	}
 }
 
-
-/// <summary>
-/// deal with key presses from the user
-/// </summary>
-/// <param name="t_event">key press event</param>
 void Game::processKeys(const std::optional<sf::Event> t_event)
 {
 	const sf::Event::KeyPressed *newKeypress = t_event->getIf<sf::Event::KeyPressed>();
@@ -95,9 +59,6 @@ void Game::processKeys(const std::optional<sf::Event> t_event)
 	}
 }
 
-/// <summary>
-/// Check if any keys are currently pressed
-/// </summary>
 void Game::checkKeyboardState()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
@@ -106,10 +67,6 @@ void Game::checkKeyboardState()
 	}
 }
 
-/// <summary>
-/// Update the game world
-/// </summary>
-/// <param name="t_deltaTime">time interval per frame</param>
 void Game::update(sf::Time t_deltaTime)
 {
 	checkKeyboardState();
@@ -119,9 +76,6 @@ void Game::update(sf::Time t_deltaTime)
 	}
 }
 
-/// <summary>
-/// draw the frame and then switch buffers
-/// </summary>
 void Game::render()
 {
 	m_window.clear(ULTRAMARINE);
@@ -132,9 +86,6 @@ void Game::render()
 	m_window.display();
 }
 
-/// <summary>
-/// load the font and setup the text message for screen
-/// </summary>
 void Game::setupTexts()
 {
 	if (!m_jerseyFont.openFromFile("ASSETS\\FONTS\\Jersey20-Regular.ttf"))
@@ -151,9 +102,6 @@ void Game::setupTexts()
 
 }
 
-/// <summary>
-/// load the texture and setup the sprite for the logo
-/// </summary>
 void Game::setupSprites()
 {
 	if (!m_DELETElogoTexture.loadFromFile("ASSETS\\IMAGES\\SFML-LOGO.png"))
@@ -166,9 +114,6 @@ void Game::setupSprites()
 	m_DELETElogoSprite.setPosition(sf::Vector2f{ 150.0f, 50.0f });
 }
 
-/// <summary>
-/// load sound file and assign buffers
-/// </summary>
 void Game::setupAudio()
 {
 	if (!m_DELETEsoundBuffer.loadFromFile("ASSETS\\AUDIO\\beep.wav"))

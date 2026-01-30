@@ -1,0 +1,5 @@
+﻿  Game.cpp
+C:\Users\gameuser\Desktop\yourHammerMyChisel\yourHammerMyChisel\Game.cpp(113,28): warning C4100: 't_deltaTime': unreferenced parameter
+  main.cpp
+  Generating Code...
+  yourHammerMyChisel.vcxproj -> C:\Users\gameuser\Desktop\yourHammerMyChisel\Debug\yourHammerMyChisel.exe

@@ -29,6 +29,8 @@ public:
 	~Game();
 	void run();
 
+	static float deltaTime;
+
 private:
 
 	void processEvents();
