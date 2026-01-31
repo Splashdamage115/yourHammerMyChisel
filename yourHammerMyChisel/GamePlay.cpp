@@ -136,7 +136,7 @@ void GamePlay::Render(sf::RenderWindow& t_window)
 	{
 		t_window.draw(overlay);
 	}
-		t_window.draw(m_npcs.renderedText);
+	t_window.draw(m_npcs.renderedText);
 }
 
 void GamePlay::setNewHeldType(ItemBeingHeld t_newType)
