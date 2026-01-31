@@ -4,8 +4,17 @@
 
 sf::Color MaskPixel::maskColor = sf::Color(255, 236, 165);
 
+Mask::Mask() : editableMask(miniMaskT)
+{
+}
+
 void Mask::Start(NPCController& t_npc)
 {
+	if (!miniMaskT.loadFromFile("./ASSETS/IMAGES/stand_mask.png"))
+	{
+		DEBUG_MSG("couldnt load stand_mask");
+	}
+	editableMask = maskStruct(miniMaskT);
 	npc = &t_npc;
 	editableMask.initMask();
 }
@@ -45,20 +54,17 @@ void Mask::DroppedMask()
 	// good mask created
 	npc->recieveMask();
 
-	editableMask = maskStruct();
+	editableMask = maskStruct(miniMaskT);
 	editableMask.initMask();
 	
 	DEBUG_MSG("GAVE MASK TO NPC");
 }
 
-maskStruct::maskStruct() : miniMask(miniMaskT)
+maskStruct::maskStruct(sf::Texture& t_texture) : miniMask(t_texture)
 {
-	if (!miniMaskT.loadFromFile("./ASSETS/IMAGES/stand_mask.png"))
-	{
-		DEBUG_MSG("couldnt load stand_mask");
-	}
-	miniMask.setTexture(miniMaskT);
-	miniMask.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(miniMaskT.getSize().x, miniMaskT.getSize().y)));
+	
+	miniMask.setTexture(t_texture);
+	miniMask.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(t_texture.getSize().x, t_texture.getSize().y)));
 	miniMask.setPosition(sf::Vector2f(-100000.f, 0.0f));
 	miniMask.setScale(sf::Vector2f(4.0f, 4.0f));
 }

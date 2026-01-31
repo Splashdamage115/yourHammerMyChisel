@@ -158,7 +158,18 @@ void NPCController::Render(sf::RenderWindow& t_window)
 {
 
 	if(m_currentnpc > 0) t_window.draw(m_todayNpcs.at(m_currentnpc - 1).m_body->sprite);
-	if (m_currentnpc < m_todayNpcs.size())t_window.draw(m_todayNpcs.at(m_currentnpc).m_body->sprite);
+	if (m_currentnpc < m_todayNpcs.size())
+	{
+		if(m_todayNpcs.at(m_currentnpc).m_body != nullptr)
+			try
+			{
+				t_window.draw(m_todayNpcs.at(m_currentnpc).m_body->sprite);
+			}
+			catch(std::exception t)
+			{
+
+			}
+	}
 
 }
 

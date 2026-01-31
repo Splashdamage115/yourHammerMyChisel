@@ -18,12 +18,11 @@ struct MaskPixel
 
 struct maskStruct
 {
-	maskStruct();
+	maskStruct(sf::Texture& t_texture);
 	bool operator==(const maskStruct& t_rhs);
 
 	std::vector<MaskPixel> m_pixels;
 	sf::Sprite miniMask;
-	sf::Texture miniMaskT;
 
 	// return true if the mask was given to the npc
 	bool update();
@@ -41,6 +40,7 @@ private:
 class Mask
 {
 public:
+	Mask();
 	void Start(NPCController& t_npc);
 	void update();
 	void Render(sf::RenderWindow& t_window);
@@ -51,5 +51,6 @@ private:
 	maskStruct editableMask;
 
 	std::vector<maskStruct> savedMasks;
+	sf::Texture miniMaskT;
 };
 
