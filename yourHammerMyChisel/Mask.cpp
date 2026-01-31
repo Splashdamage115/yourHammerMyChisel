@@ -54,11 +54,17 @@ void Mask::DroppedMask()
 bool maskStruct::operator==(const maskStruct& t_rhs)
 {
 	int incorrectPixels = 0;
+	int cutPixels = 0;
 	for (int i = 0; i < m_pixels.size(); i++)
 	{
+		if (!m_pixels.at(i).cut) continue;
+		cutPixels++;
 		if (m_pixels.at(i).cut != t_rhs.m_pixels.at(i).cut)incorrectPixels++;
 	}
-	if (incorrectPixels >= (m_pixels.size() * MAX_WRONG_PERCENT)) return false;
+	//DEBUG_MSG(incorrectPixels);
+	//DEBUG_MSG(cutPixels * MAX_WRONG_PERCENT);
+
+	if (incorrectPixels > (cutPixels * MAX_WRONG_PERCENT)) return false;
 	return true;
 }
 

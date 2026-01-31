@@ -122,7 +122,7 @@ void NPCController::Update()
 			waitingForNpc = false;
 			waitTillNextChar = TEXT_LETTER_DELAY;
 
-			
+			currentEmotionNum = m_todayNpcs.at(m_currentnpc).m_emotionNum;
 		}
 		else if (m_currentnpc == m_todayNpcs.size())
 		{
