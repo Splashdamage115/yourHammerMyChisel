@@ -88,7 +88,9 @@ void Book::Update()
 	}
 	if (dragging)
 	{
-		m_book.setNewPositionOffset(Game::mousePosition - m_lastMousePosition);
+		sf::Vector2f move = Game::mousePosition - m_lastMousePosition;
+		if(m_book.collisionBox.getPosition().x + move.x >= LEFT_MIN)
+			m_book.setNewPositionOffset(move);
 	}
 	m_lastMousePosition = Game::mousePosition;
 }

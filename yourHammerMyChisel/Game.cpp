@@ -4,6 +4,7 @@
 float Game::deltaTime;
 sf::Font Game::m_jerseyFont;
 sf::Vector2f Game::mousePosition = { 0.f,0.f };
+std::shared_ptr<GameState>Game::m_gameState;
 
 void Game::changeGameState(std::shared_ptr<GameState> t_newGameState)
 {

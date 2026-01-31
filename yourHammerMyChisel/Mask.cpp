@@ -4,19 +4,51 @@
 
 sf::Color MaskPixel::maskColor = sf::Color::White;
 
-void Mask::Start()
+void Mask::Start(NPCController& t_npc)
 {
+	npc = &t_npc;
 	editableMask.initMask();
 }
 
 void Mask::update()
 {
-	editableMask.update();
+	
+	if (editableMask.update())
+	{
+		DroppedMask();
+	}
 }
 
 void Mask::Render(sf::RenderWindow& t_window)
 {
 	editableMask.renderMask(t_window);
+}
+
+void Mask::DroppedMask()
+{
+	if (npc->currentEmotionNum >= savedMasks.size())
+	{
+		savedMasks.push_back(editableMask);
+	}
+	else
+	{
+		if (savedMasks.at(npc->currentEmotionNum) == editableMask)
+		{
+			DEBUG_MSG("GOOD MASK MADE");
+		}
+		else
+		{
+			// bad mask created
+		}
+	}
+
+	// good mask created
+	npc->recieveMask();
+
+	editableMask = maskStruct();
+	editableMask.initMask();
+	
+	DEBUG_MSG("GAVE MASK TO NPC");
 }
 
 bool maskStruct::operator==(const maskStruct& t_rhs)
@@ -30,7 +62,7 @@ bool maskStruct::operator==(const maskStruct& t_rhs)
 	return true;
 }
 
-void maskStruct::update()
+bool maskStruct::update()
 {
 	bool mouseInside = false;
 	for (int i = 0; i < m_pixels.size(); i++)
@@ -59,7 +91,7 @@ void maskStruct::update()
 	{
 		if (mouseDown)
 		{
-
+			
 			// just dropped
 			if (dragging)
 			{
@@ -69,8 +101,25 @@ void maskStruct::update()
 					//m_pixels.at(i).pixel.setSize(sf::Vector2f(MASK_PIXEL_SIZE, MASK_PIXEL_SIZE));
 
 					m_pixels.at(i).pixel.move(sf::Vector2f(0.f, 15.0f));
+
+
 				}
 				DEBUG_MSG("dropped mask");
+				drawMask = true;
+
+				miniMask.setPosition(Game::mousePosition - sf::Vector2f(MINI_MASK_SIZE / 2.f, MINI_MASK_SIZE / 2.f));
+				if (miniMask.getGlobalBounds().findIntersection(GamePlay::m_npcBox.getGlobalBounds()))
+				{
+					return true;
+				}
+				if (m_pixels.at(0).pixel.getPosition().x < LEFT_MIN)
+				{
+					sf::Vector2f move = sf::Vector2f(LEFT_MIN - (m_pixels.at(0).pixel.getPosition().x - ((MASK_PIXEL_SIZE * 3) + 30.f)),0.f);
+					for (int i = 0; i < m_pixels.size(); i++)
+					{
+						m_pixels.at(i).setNewPositionOffset(move);
+					}
+				}
 			}
 			dragging = false;
 		}
@@ -80,15 +129,32 @@ void maskStruct::update()
 	{
 		if (dragging)
 		{
-			for (int i = 0; i < m_pixels.size(); i++)
+			sf::Vector2f move = Game::mousePosition - lastMousePos;
+			bool skipMove = false;
+			if (Game::mousePosition.x < LEFT_MIN)
 			{
-				m_pixels.at(i).setNewPositionOffset(Game::mousePosition - lastMousePos);
+				skipMove = true;
+			}
+
+			if (!skipMove)
+			{
+				drawMask = true;
+				for (int i = 0; i < m_pixels.size(); i++)
+				{
+					m_pixels.at(i).setNewPositionOffset(move);
+				}
+			}
+			else
+			{
+				miniMask.setPosition(Game::mousePosition - sf::Vector2f(MINI_MASK_SIZE / 2.f, MINI_MASK_SIZE / 2.f));
+				drawMask = false;
 			}
 		}
 		// handle dragging
 	}
 
 	lastMousePos = Game::mousePosition;
+	return false;
 }
 
 void maskStruct::initMask()
@@ -122,22 +188,32 @@ void maskStruct::initMask()
 			m_pixels.at(m_pixels.size() - 1).shadow.setSize(sf::Vector2f(MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET, MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET));
 			m_pixels.at(m_pixels.size() - 1).shadow.setFillColor(sf::Color(0, 0, 0, 80));
 			m_pixels.at(m_pixels.size() - 1).shadow.setPosition(sf::Vector2f(((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET) * x) + MASK_START_X + MASK_SHADOW_OFFSET_X, ((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET) * y) + MASK_START_Y + MASK_SHADOW_OFFSET_Y));
-
 		}
 	}
+
+	miniMask.setSize(sf::Vector2f(MINI_MASK_SIZE, MINI_MASK_SIZE));
+	miniMask.setFillColor(sf::Color(0.f,0.f,0.f, 80.f));
+
 }
 
 void maskStruct::renderMask(sf::RenderWindow& t_window)
 {
-	for (int i = 0; i < m_pixels.size(); i++)
+	if (drawMask)
 	{
-		if (m_pixels.at(i).cut) continue;
-		t_window.draw(m_pixels.at(i).shadow);
+		for (int i = 0; i < m_pixels.size(); i++)
+		{
+			if (m_pixels.at(i).cut) continue;
+			t_window.draw(m_pixels.at(i).shadow);
+		}
+		for (int i = 0; i < m_pixels.size(); i++)
+		{
+			if (m_pixels.at(i).cut) continue;
+			t_window.draw(m_pixels.at(i).pixel);
+		}
 	}
-	for (int i = 0; i < m_pixels.size(); i++)
+	else
 	{
-		if (m_pixels.at(i).cut) continue;
-		t_window.draw(m_pixels.at(i).pixel);
+		t_window.draw(miniMask);
 	}
 }
 

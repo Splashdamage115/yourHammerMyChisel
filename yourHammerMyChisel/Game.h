@@ -41,6 +41,7 @@ public:
 
 	void changeGameState(std::shared_ptr<GameState> t_newGameState);
 	sf::RenderWindow m_window; // main SFML window
+	static std::shared_ptr<GameState>m_gameState;
 private:
 	Game();
 	void processEvents();
@@ -54,7 +55,6 @@ private:
 
 	bool m_exitGame; // control exiting game
 
-	std::shared_ptr<GameState>m_gameState;
 };
 
 #pragma warning( pop ) 
