@@ -2,7 +2,7 @@
 #include "Game.h"
 #include "GamePlay.h"
 
-sf::Color MaskPixel::maskColor = sf::Color::White;
+sf::Color MaskPixel::maskColor = sf::Color(255, 236, 165);
 
 void Mask::Start(NPCController& t_npc)
 {
@@ -49,6 +49,18 @@ void Mask::DroppedMask()
 	editableMask.initMask();
 	
 	DEBUG_MSG("GAVE MASK TO NPC");
+}
+
+maskStruct::maskStruct() : miniMask(miniMaskT)
+{
+	if (!miniMaskT.loadFromFile("./ASSETS/IMAGES/stand_mask.png"))
+	{
+		DEBUG_MSG("couldnt load stand_mask");
+	}
+	miniMask.setTexture(miniMaskT);
+	miniMask.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(miniMaskT.getSize().x, miniMaskT.getSize().y)));
+	miniMask.setPosition(sf::Vector2f(-100000.f, 0.0f));
+	miniMask.setScale(sf::Vector2f(4.0f, 4.0f));
 }
 
 bool maskStruct::operator==(const maskStruct& t_rhs)
@@ -197,8 +209,8 @@ void maskStruct::initMask()
 		}
 	}
 
-	miniMask.setSize(sf::Vector2f(MINI_MASK_SIZE, MINI_MASK_SIZE));
-	miniMask.setFillColor(sf::Color(0.f,0.f,0.f, 80.f));
+	//miniMask.setSize(sf::Vector2f(MINI_MASK_SIZE, MINI_MASK_SIZE));
+	//miniMask.setFillColor(sf::Color(0.f,0.f,0.f, 80.f));
 
 }
 

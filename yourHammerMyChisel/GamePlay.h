@@ -5,6 +5,7 @@
 #include "ToolSelector.h"
 #include "Book.h"
 #include "NPCController.h"
+#include "AnimatedSprite.h"
 
 enum class Tool
 {
@@ -19,7 +20,7 @@ enum class ItemBeingHeld
 class GamePlay : public GameState
 {
 public:
-	GamePlay() {}
+	GamePlay();
 
 	virtual void Start();
 	virtual void Update();
@@ -31,6 +32,7 @@ public:
 	static ItemBeingHeld itemHeld;
 	static sf::RectangleShape m_npcBox;
 	static int currentEmotion;
+	static AnimatedSprite anims;
 private:
 	ToolSelector m_chiselToolSlot;
 	ToolSelector m_brushToolSlot;
@@ -48,5 +50,14 @@ private:
 	float opacity = 0.0f;
 	float Transition = 0.5f;
 	float delayLeft = 0.0f;
+
+	sf::Texture tableTexture;
+	sf::Sprite tableSprite;
+
+	sf::Texture standTexture;
+	sf::Sprite standSprite;
+
+
+	std::shared_ptr<Sprite> m_bg;
 };
 

@@ -11,7 +11,7 @@
 #define SCREEN_HEIGHT 1536
 
 #define LEFT_MIN 900
-#define STAND_X 300.f
+#define STAND_X 128.f
 
 #define MINI_MASK_SIZE 32
 
@@ -36,3 +36,5 @@
 #define TEXT_LETTER_DELAY 0.05f
 
 #define MAX_DAYS 2
+
+#define FRAME_TIME 0.3f

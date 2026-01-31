@@ -7,9 +7,45 @@ ItemBeingHeld GamePlay::itemHeld = ItemBeingHeld::none;
 bool GamePlay::pageOnTop = false;
 sf::RectangleShape GamePlay::m_npcBox;
 int GamePlay::currentEmotion = 0;
+AnimatedSprite GamePlay::anims;
+
+GamePlay::GamePlay() : tableSprite(tableTexture), standSprite(standTexture)
+{
+}
 
 void GamePlay::Start()
 {
+	anims.Start();
+	if (!tableTexture.loadFromFile("./ASSETS/IMAGES/table.png"))
+	{
+		DEBUG_MSG("couldnt load table");
+	}
+	tableSprite.setTexture(tableTexture);
+	tableSprite.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(tableTexture.getSize().x, tableTexture.getSize().y)));
+	tableSprite.setPosition(sf::Vector2f(888.0f, 0.0f));
+	tableSprite.setScale(sf::Vector2f(4.0f, 4.0f));
+
+
+	if (!standTexture.loadFromFile("./ASSETS/IMAGES/stand.png"))
+	{
+		DEBUG_MSG("couldnt load table");
+	}
+	standSprite.setTexture(standTexture);
+	standSprite.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(standTexture.getSize().x, standTexture.getSize().y)));
+	standSprite.setPosition(sf::Vector2f(0.0f, 0.0f));
+	standSprite.setScale(sf::Vector2f(4.0f, 4.0f));
+
+	//if (!bgTexture.loadFromFile("./ASSETS/IMAGES/bg.png"))
+	//{
+	//	DEBUG_MSG("couldnt load table");
+	//}
+	//bgSprite.setTexture(bgTexture);
+
+	m_bg = anims.getSprite(TextureType::bg);
+	m_bg->sprite.setPosition(sf::Vector2f(132.0f, 128.0f));
+
+
+
 	m_npcBox.setSize(sf::Vector2f(LEFT_MIN, SCREEN_HEIGHT));
 
 	m_npcs.Start(0);
@@ -24,6 +60,7 @@ void GamePlay::Start()
 
 void GamePlay::Update()
 {
+	anims.update();
 	if (transitionNewDay)
 	{
 		if (delayLeft >= 0.f)
@@ -75,6 +112,11 @@ void GamePlay::Update()
 
 void GamePlay::Render(sf::RenderWindow& t_window)
 {
+	t_window.draw(m_bg->sprite);
+	m_npcs.Render(t_window);
+	t_window.draw(standSprite);
+	t_window.draw(tableSprite);
+
 	//t_window.draw(m_npcBox);
 	if (pageOnTop)
 	{
@@ -89,12 +131,12 @@ void GamePlay::Render(sf::RenderWindow& t_window)
 	m_brushToolSlot.Render(t_window);
 	m_chiselToolSlot.Render(t_window);
 
-	m_npcs.Render(t_window);
 
 	if (transitionNewDay)
 	{
 		t_window.draw(overlay);
 	}
+	t_window.draw(m_npcs.renderedText);
 }
 
 void GamePlay::setNewHeldType(ItemBeingHeld t_newType)

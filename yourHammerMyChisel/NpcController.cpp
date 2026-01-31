@@ -2,11 +2,21 @@
 #include "GamePlay.h"
 #include "Game.h"
 
-void Npc::init(Dialogue t_lines, int emotionNum)
+void Npc::init(Dialogue t_lines, int emotionNum, TextureType t_tex)
 {
-	m_body.setSize(sf::Vector2f(120.f, 120.f));
-	m_body.setFillColor(sf::Color::White);
-	m_body.setPosition(sf::Vector2f(-300.f, 200.f));
+	if (t_tex == TextureType::moodman)
+	{
+		standPos = -32.f;
+	}
+	else
+	{
+		standPos = STAND_X;
+	}
+
+	m_body = GamePlay::anims.getSprite(t_tex);
+	//m_body.setSize(sf::Vector2f(120.f, 120.f));
+	//m_body.setFillColor(sf::Color::White);
+	m_body->sprite.setPosition(sf::Vector2f(-1000.f, 128.f));
 
 	lines = t_lines;
 	m_emotionNum = emotionNum;
@@ -19,7 +29,7 @@ NPCController::NPCController() : renderedText(Game::m_jerseyFont)
 void NPCController::Start(int t_day)
 {
 	renderedText.setString("");
-	renderedText.setFillColor(sf::Color::Black);
+	renderedText.setFillColor(sf::Color::White);
 	renderedText.setCharacterSize(32u);
 	renderedText.setPosition(sf::Vector2f(40.f, 100.f));
 
@@ -33,7 +43,7 @@ void NPCController::Start(int t_day)
 		newLines.dialogue.emplace_back("Welcome to the game");
 		newLines.dialogue.emplace_back("Make me Happy");
 
-		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 0);
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 0, TextureType::moodman);
 
 		
 
@@ -43,7 +53,7 @@ void NPCController::Start(int t_day)
 		newLines.dialogue.emplace_back("Waddup");
 		newLines.dialogue.emplace_back("Make me Happy I suppose");
 
-		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 0);
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 0, TextureType::client);
 
 	}
 
@@ -56,7 +66,7 @@ void NPCController::Start(int t_day)
 		newLines.dialogue.emplace_back("Im back");
 		newLines.dialogue.emplace_back("Make me Sad");
 
-		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 1);
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 1, TextureType::moodman);
 
 
 
@@ -66,14 +76,14 @@ void NPCController::Start(int t_day)
 		newLines.dialogue.emplace_back("Waddup");
 		newLines.dialogue.emplace_back("Make me Sad I suppose");
 
-		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 1);
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 1, TextureType::client);
 
 		m_todayNpcs.emplace_back();
 		newLines = Dialogue();
 		newLines.dialogue.emplace_back("Waddup");
 		newLines.dialogue.emplace_back("Make me Happy I suppose");
 
-		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 0);
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 0, TextureType::client);
 	}
 	m_currentnpc = 0;
 	bufferedText = m_todayNpcs.at(m_currentnpc).lines.dialogue.at(m_todayNpcs.at(m_currentnpc).lines.currentPos++);
@@ -112,7 +122,7 @@ void NPCController::Update()
 	}
 	else if (waitingForNpc)
 	{
-		if (m_currentnpc < m_todayNpcs.size() && m_todayNpcs.at(m_currentnpc).m_body.getPosition().x >= STAND_X)
+		if (m_currentnpc < m_todayNpcs.size() && m_todayNpcs.at(m_currentnpc).m_body->sprite.getPosition().x >= m_todayNpcs.at(m_currentnpc).standPos)
 		{
 			// ARRIVED AT STAND
 
@@ -130,8 +140,8 @@ void NPCController::Update()
 		}
 		else
 		{
-			if (m_currentnpc > 0)m_todayNpcs.at(m_currentnpc - 1).m_body.move(sf::Vector2f(300.f * Game::deltaTime, 0.0f));
-			if (m_currentnpc < m_todayNpcs.size())m_todayNpcs.at(m_currentnpc).m_body.move(sf::Vector2f(200.f * Game::deltaTime, 0.0f));
+			if (m_currentnpc > 0)m_todayNpcs.at(m_currentnpc - 1).m_body->sprite.move(sf::Vector2f(300.f * Game::deltaTime, 0.0f));
+			if (m_currentnpc < m_todayNpcs.size())m_todayNpcs.at(m_currentnpc).m_body->sprite.move(sf::Vector2f(200.f * Game::deltaTime, 0.0f));
 		}
 	}
 
@@ -146,10 +156,10 @@ void NPCController::Update()
 
 void NPCController::Render(sf::RenderWindow& t_window)
 {
-	t_window.draw(renderedText);
 
-	if(m_currentnpc > 0) t_window.draw(m_todayNpcs.at(m_currentnpc - 1).m_body);
-	if (m_currentnpc < m_todayNpcs.size())t_window.draw(m_todayNpcs.at(m_currentnpc).m_body);
+	if(m_currentnpc > 0) t_window.draw(m_todayNpcs.at(m_currentnpc - 1).m_body->sprite);
+	if (m_currentnpc < m_todayNpcs.size())t_window.draw(m_todayNpcs.at(m_currentnpc).m_body->sprite);
+
 }
 
 void NPCController::recieveMask()

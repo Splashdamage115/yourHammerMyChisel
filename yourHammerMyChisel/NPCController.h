@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Library.h"
+#include "AnimatedSprite.h"
 
 struct Dialogue
 {
@@ -11,11 +12,14 @@ struct Dialogue
 class Npc
 {
 public:
-	void init(Dialogue t_lines, int emotionNum);
+	void init(Dialogue t_lines, int emotionNum, TextureType t_tex);
 	Dialogue lines;
 	int m_emotionNum = 0;
 
-	sf::RectangleShape m_body;
+	std::shared_ptr<Sprite> m_body;
+
+	float standPos = 128.f;
+
 };
 
 class NPCController
@@ -28,8 +32,8 @@ public:
 	void recieveMask();
 
 	int currentEmotionNum = 0;
-private:
 	sf::Text renderedText;
+private:
 	float waitTillNextChar = TEXT_LETTER_DELAY;
 	std::string currentText = "";
 	std::string bufferedText = "";

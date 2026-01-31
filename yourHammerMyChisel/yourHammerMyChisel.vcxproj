@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="Book.cpp" />
     <ClCompile Include="NPCController.cpp" />
     <ClCompile Include="ToolSelector.cpp" />
@@ -30,6 +31,7 @@
     <ClCompile Include="WinningScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatedSprite.h" />
     <ClInclude Include="Book.h" />
     <ClInclude Include="NPCController.h" />
     <ClInclude Include="ToolSelector.h" />
