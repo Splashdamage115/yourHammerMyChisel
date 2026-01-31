@@ -5,16 +5,28 @@
 struct MaskPixel
 {
 	sf::RectangleShape pixel;
+	sf::RectangleShape shadow;
 
-	sf::Color maskColor = sf::Color::White;
+	bool checkMouse();
+	void setNewPositionOffset(sf::Vector2f t_newVector);
+
+	static sf::Color maskColor;
+
+	bool cut = false;
 };
 
-struct mask
+struct maskStruct
 {
 	std::vector<MaskPixel> m_pixels;
 
+	void update();
+
 	void initMask();
 	void renderMask(sf::RenderWindow& t_window);
+
+private:
+	sf::Vector2f lastMousePos = { 0.f,0.f };
+	bool mouseDown = false;
 };
 
 class Mask
@@ -24,6 +36,6 @@ public:
 	void update();
 	void Render(sf::RenderWindow& t_window);
 private:
-	mask editableMask;
+	maskStruct editableMask;
 };
 

@@ -5,8 +5,17 @@
 #include <vector>
 #include <iostream>
 
+#define DEBUG_MSG(x) (std::cout << (x) << std::endl)
+
 #define SCREEN_WIDTH 2048
 #define SCREEN_HEIGHT 1536
 
-#define MASK_WIDTH 64
-#define WASK_HEIGHT 64
+#define MASK_WIDTH 11
+#define WASK_HEIGHT 16
+
+#define MASK_PIXEL_SIZE 24.f
+#define MASK_PIXEL_OFFSET 1.f
+#define MASK_START_X 250.f
+#define MASK_START_Y 250.f
+#define MASK_SHADOW_OFFSET_X 8.f
+#define MASK_SHADOW_OFFSET_Y 6.f

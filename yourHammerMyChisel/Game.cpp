@@ -1,14 +1,23 @@
 #include "Game.h"
+#include "GamePlay.h"
 
+float Game::deltaTime;
+sf::Font Game::m_jerseyFont;
+sf::Vector2f Game::mousePosition = { 0.f,0.f };
+
+void Game::changeGameState(std::shared_ptr<GameState> t_newGameState)
+{
+	m_gameState = t_newGameState;
+
+	m_gameState->Start();
+}
 
 Game::Game() :
 	m_window{ sf::VideoMode{ sf::Vector2u{SCREEN_WIDTH, SCREEN_HEIGHT}, 32U}, "your Hammer my Chisel"},
-	m_DELETEexitGame{false} //when true game will exit
+	m_exitGame{false} //when true game will exit
 {
-	m_mask.Start();
 	setupTexts(); // load font 
-	setupSprites(); // load texture
-	setupAudio(); // load sounds
+	changeGameState(std::make_shared<GamePlay>());
 }
 
 Game::~Game()
@@ -42,7 +51,7 @@ void Game::processEvents()
 	{
 		if ( newEvent->is<sf::Event::Closed>()) // close window message 
 		{
-			m_DELETEexitGame = true;
+			m_exitGame = true;
 		}
 		if (newEvent->is<sf::Event::KeyPressed>()) //user pressed a key
 		{
@@ -56,7 +65,7 @@ void Game::processKeys(const std::optional<sf::Event> t_event)
 	const sf::Event::KeyPressed *newKeypress = t_event->getIf<sf::Event::KeyPressed>();
 	if (sf::Keyboard::Key::Escape == newKeypress->code)
 	{
-		m_DELETEexitGame = true; 
+		m_exitGame = true;
 	}
 }
 
@@ -64,27 +73,29 @@ void Game::checkKeyboardState()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
 	{
-		m_DELETEexitGame = true; 
+		m_exitGame = true; 
 	}
 }
 
 void Game::update(sf::Time t_deltaTime)
 {
+	deltaTime = t_deltaTime.asSeconds();
+	sf::Vector2i m = sf::Mouse::getPosition(m_window);
+	mousePosition = sf::Vector2f(m.x, m.y);
+
 	checkKeyboardState();
-	m_mask.update();
-	if (m_DELETEexitGame)
+	if (m_exitGame)
 	{
 		m_window.close();
 	}
+	m_gameState->Update();
 }
 
 void Game::render()
 {
 	m_window.clear(ULTRAMARINE);
 
-	m_window.draw(m_DELETElogoSprite);
-	m_window.draw(m_DELETEwelcomeMessage);
-	m_mask.Render(m_window);
+	m_gameState->Render(m_window);
 
 	m_window.display();
 }
@@ -95,33 +106,13 @@ void Game::setupTexts()
 	{
 		std::cout << "problem loading arial black font" << std::endl;
 	}
-	m_DELETEwelcomeMessage.setFont(m_jerseyFont);
-	m_DELETEwelcomeMessage.setString("SFML Game");
-	m_DELETEwelcomeMessage.setPosition(sf::Vector2f{ 205.0f, 240.0f });
-	m_DELETEwelcomeMessage.setCharacterSize(96U);
-	m_DELETEwelcomeMessage.setOutlineColor(sf::Color::Black);
-	m_DELETEwelcomeMessage.setFillColor(sf::Color::Red);
-	m_DELETEwelcomeMessage.setOutlineThickness(2.0f);
+	//m_DELETEwelcomeMessage.setFont(m_jerseyFont);
+	//m_DELETEwelcomeMessage.setString("SFML Game");
+	//m_DELETEwelcomeMessage.setPosition(sf::Vector2f{ 205.0f, 240.0f });
+	//m_DELETEwelcomeMessage.setCharacterSize(96U);
+	//m_DELETEwelcomeMessage.setOutlineColor(sf::Color::Black);
+	//m_DELETEwelcomeMessage.setFillColor(sf::Color::Red);
+	//m_DELETEwelcomeMessage.setOutlineThickness(2.0f);
 
 }
 
-void Game::setupSprites()
-{
-	if (!m_DELETElogoTexture.loadFromFile("ASSETS\\IMAGES\\SFML-LOGO.png"))
-	{
-		// simple error message if previous call fails
-		std::cout << "problem loading logo" << std::endl;
-	}
-	
-	m_DELETElogoSprite.setTexture(m_DELETElogoTexture,true);// to reset the dimensions of texture
-	m_DELETElogoSprite.setPosition(sf::Vector2f{ 150.0f, 50.0f });
-}
-
-void Game::setupAudio()
-{
-	if (!m_DELETEsoundBuffer.loadFromFile("ASSETS\\AUDIO\\beep.wav"))
-	{
-		std::cout << "Error loading beep sound" << std::endl;
-	}
-	m_DELETEsound.play(); // test sound
-}

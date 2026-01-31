@@ -18,22 +18,35 @@
 /// </summary>
 #include "Library.h"
 
-#include "Mask.h"
-
+#include "GameState.h"
 
 const sf::Color ULTRAMARINE{ 5, 55,242,255 }; // const colour
 
 class Game
 {
 public:
-	Game();
+	static Game& getInstance()
+	{
+		static Game instance;
+		return instance;
+	}
+
+	// DELETE FUNCTIONS TO AVOID MORE INSTANCES
+	Game(Game const&) = delete;
+	void operator=(Game const&) = delete;
+
 	~Game();
 	void run();
 
+
+
 	static float deltaTime;
+	static sf::Font m_jerseyFont;
+	static sf::Vector2f mousePosition;
 
+	void changeGameState(std::shared_ptr<GameState> t_newGameState);
 private:
-
+	Game();
 	void processEvents();
 	void processKeys(const std::optional<sf::Event> t_event);
 	void checkKeyboardState();
@@ -41,22 +54,12 @@ private:
 	void render();
 	
 	void setupTexts();
-	void setupSprites();
-	void setupAudio();
-
 	
 	sf::RenderWindow m_window; // main SFML window
-	sf::Font m_jerseyFont;// font used by message
 	
-	sf::Text m_DELETEwelcomeMessage{ m_jerseyFont }; // text used for message on screen
-	sf::Texture m_DELETElogoTexture;//  texture used for sfml logo
-	sf::Sprite m_DELETElogoSprite{ m_DELETElogoTexture }; // sprite used for sfml logo
-	
-	sf::SoundBuffer m_DELETEsoundBuffer; // buffer for beep sound
-	sf::Sound m_DELETEsound{ m_DELETEsoundBuffer }; // sound object to play
-	bool m_DELETEexitGame; // control exiting game
+	bool m_exitGame; // control exiting game
 
-	Mask m_mask;
+	std::shared_ptr<GameState>m_gameState;
 };
 
 #pragma warning( pop ) 
