@@ -1,8 +1,3 @@
-/// <summary>
-/// author Pete Lowe May 2025
-/// you need to change the above line or lose marks
-/// Also don't have any member properties called Delete...
-/// </summary>
 #ifndef GAME_HPP
 #define GAME_HPP
 #pragma warning( push )

@@ -29,6 +29,7 @@ struct maskStruct
 private:
 	sf::Vector2f lastMousePos = { 0.f,0.f };
 	bool mouseDown = false;
+	bool dragging = false;
 };
 
 class Mask
