@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "GamePlay.h"
+#include "MainMenu.h"
 
 float Game::deltaTime;
 sf::Font Game::m_jerseyFont;
@@ -18,7 +19,7 @@ Game::Game() :
 	m_exitGame{false} //when true game will exit
 {
 	setupTexts(); // load font 
-	changeGameState(std::make_shared<GamePlay>());
+	changeGameState(std::make_shared<MainMenu>());
 }
 
 Game::~Game()
