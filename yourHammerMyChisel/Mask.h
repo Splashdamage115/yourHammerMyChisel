@@ -17,6 +17,8 @@ struct MaskPixel
 
 struct maskStruct
 {
+	bool operator==(const maskStruct& t_rhs);
+
 	std::vector<MaskPixel> m_pixels;
 
 	void update();
@@ -37,5 +39,7 @@ public:
 	void Render(sf::RenderWindow& t_window);
 private:
 	maskStruct editableMask;
+
+	std::vector<maskStruct> savedMasks;
 };
 

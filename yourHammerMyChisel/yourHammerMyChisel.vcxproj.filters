@@ -39,7 +39,10 @@
     <ClCompile Include="GamePlay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ChiselTool.cpp">
+    <ClCompile Include="ToolSelector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Book.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,7 +62,10 @@
     <ClInclude Include="GamePlay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ChiselTool.h">
+    <ClInclude Include="ToolSelector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Book.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

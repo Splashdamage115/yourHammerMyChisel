@@ -45,6 +45,7 @@ public:
 	static sf::Vector2f mousePosition;
 
 	void changeGameState(std::shared_ptr<GameState> t_newGameState);
+	sf::RenderWindow m_window; // main SFML window
 private:
 	Game();
 	void processEvents();
@@ -55,8 +56,7 @@ private:
 	
 	void setupTexts();
 	
-	sf::RenderWindow m_window; // main SFML window
-	
+
 	bool m_exitGame; // control exiting game
 
 	std::shared_ptr<GameState>m_gameState;

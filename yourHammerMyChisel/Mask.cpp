@@ -19,6 +19,17 @@ void Mask::Render(sf::RenderWindow& t_window)
 	editableMask.renderMask(t_window);
 }
 
+bool maskStruct::operator==(const maskStruct& t_rhs)
+{
+	int incorrectPixels = 0;
+	for (int i = 0; i < m_pixels.size(); i++)
+	{
+		if (m_pixels.at(i).cut != t_rhs.m_pixels.at(i).cut)incorrectPixels++;
+	}
+	if(incorrectPixels >= (m_pixels.size() * MAX_WRONG_PERCENT)) return false;
+	return true;
+}
+
 void maskStruct::update()
 {
 	bool mouseInside = false;
@@ -34,6 +45,11 @@ void maskStruct::update()
 	}
 	if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 	{
+		if (mouseDown)
+		{
+			// just dropped
+			DEBUG_MSG("dropped mask");
+		}
 		mouseDown = false;
 	}
 	if (mouseDown)
