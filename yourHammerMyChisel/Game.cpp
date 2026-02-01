@@ -106,7 +106,7 @@ void Game::render()
 
 void Game::setupTexts()
 {
-	if (!m_jerseyFont.openFromFile("ASSETS\\FONTS\\Jersey20-Regular.ttf"))
+	if (!m_jerseyFont.openFromFile("ASSETS\\FONTS\\Jersey20-Regular.otf"))
 	{
 		std::cout << "problem loading arial black font" << std::endl;
 	}
