@@ -14,5 +14,7 @@ private:
 	sf::Sprite loseScreenSprite{ loseScreenTexture };
 
 	sf::Text continueText{ Game::m_jerseyFont };
+
+	bool mouseDown = false;
 };
 

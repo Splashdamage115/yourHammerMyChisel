@@ -22,6 +22,17 @@ void LosingScreen::Update()
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
 	{
 		Game::getInstance().changeGameState(std::make_shared<GamePlay>());
+		return;
+	}
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	{
+		mouseDown = true;
+	}
+	if (mouseDown && !sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	{
+		Game::getInstance().changeGameState(std::make_shared<GamePlay>());
+		return;
 	}
 }
 
