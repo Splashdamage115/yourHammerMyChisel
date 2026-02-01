@@ -117,13 +117,84 @@ bool maskStruct::update()
 		}
 	}
 	bool mouseInside = false;
+	bool mouseWasFound = false;
 	for (int i = 0; i < m_pixels.size(); i++)
 	{
 		mouseInside = m_pixels.at(i).checkMouse();
-		if (mouseInside && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) break;
+		if (mouseInside && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && GamePlay::heldTool == Tool::Chisel)
+		{
+			mouseHeldTime += Game::deltaTime;
+		}
+		if (mouseInside && !sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && mouseHeldTime > 0.f && GamePlay::heldTool == Tool::Chisel)
+		{
+			if (mouseHeldTime < 0.25f)
+			{
+				m_pixels.at(i).cut = true;
+			}
+			else if (mouseHeldTime < 1.f)
+			{
+				m_pixels.at(i).cut = true;
+				if (i > MASK_WIDTH)
+				{
+					m_pixels.at(i - MASK_WIDTH).cut = true;
+				}
+				if (i < (MASK_WIDTH - 1) * WASK_HEIGHT)
+				{
+					m_pixels.at(i + MASK_WIDTH).cut = true;
+				}
+				if (i % MASK_WIDTH > 0)
+				{
+					m_pixels.at(i - 1).cut = true;
+				}
+				if ((i + 1) % MASK_WIDTH < MASK_WIDTH)
+				{
+					m_pixels.at(i + 1).cut = true;
+				}
+			}
+			else
+			{
+				m_pixels.at(i).cut = true;
+				if (i > MASK_WIDTH)
+				{
+					m_pixels.at(i - MASK_WIDTH).cut = true;
+					if (i - 1 > MASK_WIDTH && (i - 1) % MASK_WIDTH > 0)
+					{
+						m_pixels.at(i - 1 - MASK_WIDTH).cut = true;
+					}
+					if (i + 1 > MASK_WIDTH && (i + 1) % MASK_WIDTH < MASK_WIDTH)
+					{
+						m_pixels.at(i + 1 - MASK_WIDTH).cut = true;
+					}
+				}
+				if (i < (MASK_WIDTH - 1) * WASK_HEIGHT)
+				{
+					m_pixels.at(i + MASK_WIDTH).cut = true;
+					if (i - 1 > MASK_WIDTH && (i - 1) % MASK_WIDTH > 0)
+					{
+						m_pixels.at(i - 1 + MASK_WIDTH).cut = true;
+					}
+					if (i + 1 > MASK_WIDTH && (i + 1) % MASK_WIDTH < MASK_WIDTH)
+					{
+						m_pixels.at(i + 1 + MASK_WIDTH).cut = true;
+					}
+				}
+				if (i % MASK_WIDTH > 0)
+				{
+					m_pixels.at(i - 1).cut = true;
+				}
+				if ((i + 1) % MASK_WIDTH < MASK_WIDTH)
+				{
+					m_pixels.at(i + 1).cut = true;
+				}
+			}
+			mouseHeldTime = 0.0f;
+		}
+		if(!mouseWasFound) mouseWasFound = mouseInside;
+
+		//if (mouseInside) break;
 	}
 
-	if ((mouseInside && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && GamePlay::heldTool == Tool::none))
+	if ((mouseWasFound && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && GamePlay::heldTool == Tool::none))
 	{
 		if (!mouseDown)
 		{
@@ -216,7 +287,7 @@ void maskStruct::initMask(sf::Texture& t_textureTile)
 		{0,0}, {0,1}, {1,0}, {MASK_WIDTH - 1 , 0}, {MASK_WIDTH - 1 , 1}, {MASK_WIDTH - 2 , 0},
 		{0,WASK_HEIGHT - 1}, {0,WASK_HEIGHT - 2}, {1,WASK_HEIGHT - 1}, {MASK_WIDTH - 1,WASK_HEIGHT - 1}, {MASK_WIDTH - 1,WASK_HEIGHT - 2}, {MASK_WIDTH - 2,WASK_HEIGHT - 1},
 		{ 0,WASK_HEIGHT - 3}, {0,WASK_HEIGHT - 4}, {0,WASK_HEIGHT - 5}, {MASK_WIDTH - 1,WASK_HEIGHT - 3},{MASK_WIDTH - 1,WASK_HEIGHT - 4},{MASK_WIDTH - 1,WASK_HEIGHT - 5},
-		{ 1,WASK_HEIGHT - 2}, {0,WASK_HEIGHT - 3}, {MASK_WIDTH - 1,WASK_HEIGHT - 2},{MASK_WIDTH - 1,WASK_HEIGHT - 3},
+		{ 1,WASK_HEIGHT - 2}, {0,WASK_HEIGHT - 3}, {MASK_WIDTH - 1,WASK_HEIGHT - 2},{MASK_WIDTH - 1,WASK_HEIGHT - 3}
 	};
 
 	for (int y = 0; y < WASK_HEIGHT; y++)
@@ -230,9 +301,9 @@ void maskStruct::initMask(sf::Texture& t_textureTile)
 					found = true;
 					break;
 				}
-			if (found) continue;
 
 			m_pixels.emplace_back();
+			if (found)m_pixels.at(m_pixels.size() - 1).cut = true;
 
 			m_pixels.at(m_pixels.size() - 1).pixel.setTexture(t_textureTile);
 			m_pixels.at(m_pixels.size() - 1).pixel.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(t_textureTile.getSize().x, t_textureTile.getSize().y)));
@@ -284,10 +355,10 @@ bool MaskPixel::checkMouse()
 		if (GamePlay::heldTool == Tool::Chisel)
 		{
 			pixel.setColor(sf::Color(255, 255, 255, 125));
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-			{
-				cut = true;
-			}
+			//if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+			//{
+			//	cut = true;
+			//}
 		}
 		return true;
 	}

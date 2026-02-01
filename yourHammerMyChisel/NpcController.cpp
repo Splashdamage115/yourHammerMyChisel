@@ -251,7 +251,9 @@ void NPCController::recieveMask(bool loss)
 	if (loss) badMask();
 
 	waitingForNpc = true;
-
+	bufferedText.clear();
+	currentText.clear();
+	textPosition = 0;
 }
 
 void NPCController::badMask()

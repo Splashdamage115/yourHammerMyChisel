@@ -33,6 +33,8 @@ struct maskStruct
 
 	bool drawMask = true;
 	sf::Texture maskTile;
+
+	float mouseHeldTime = 0.0f;
 private:
 	sf::Vector2f lastMousePos = { 0.f,0.f };
 	bool mouseDown = false;
