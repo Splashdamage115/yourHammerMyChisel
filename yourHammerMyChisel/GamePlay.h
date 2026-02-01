@@ -6,6 +6,7 @@
 #include "Book.h"
 #include "NPCController.h"
 #include "AnimatedSprite.h"
+#include "Cursor.h"
 
 enum class Tool
 {
@@ -33,6 +34,8 @@ public:
 	static sf::RectangleShape m_npcBox;
 	static int currentEmotion;
 	static AnimatedSprite anims;
+
+	static Cursor cursors; // cstan
 
 	static bool hammerGone;
 private:
