@@ -67,6 +67,16 @@ void NPCController::Start(int t_day)
 	renderedText.setCharacterSize(32u);
 	renderedText.setPosition(sf::Vector2f(40.f, 100.f));
 
+	if (!moodmanEntrySoundBuffer.loadFromFile("ASSETS\\AUDIO\\moodman_entry.wav"))
+	{
+		std::cout << "ERROR: couldn't load moodman_entry.wav" << std::endl;
+	}
+
+	if (!clientEntrySoundBuffer.loadFromFile("ASSETS\\AUDIO\\client_entry.wav"))
+	{
+		std::cout << "ERROR: couldn't load client_entry.wav" << std::endl;
+	}
+
 	m_todayNpcs.clear();
 	if (t_day == 0)
 	{

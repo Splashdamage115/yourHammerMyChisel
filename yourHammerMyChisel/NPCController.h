@@ -51,6 +51,12 @@ public:
 
 	sf::Sprite mask{ maskT };
 	sf::Sprite hammer{ hammerT };
+
+	sf::SoundBuffer moodmanEntrySoundBuffer;
+	sf::Sound moodmanEntrySound{ moodmanEntrySoundBuffer };
+
+	sf::SoundBuffer clientEntrySoundBuffer;
+	sf::Sound clientEntrySound{ clientEntrySoundBuffer };
 private:
 	float waitTillNextChar = TEXT_LETTER_DELAY;
 	std::string currentText = "";
