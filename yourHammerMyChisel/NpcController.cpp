@@ -2,6 +2,20 @@
 #include "GamePlay.h"
 #include "Game.h"
 
+enum Moods
+{
+	HAPPY = 0,
+	SAD = 1,
+	ANGRY = 2,
+	DISGUST = 3,
+	FEAR = 4,
+	FAITH = 5,
+	DREAD = 6,
+	ECCENTRIC = 7,
+	FALLING = 8,
+	MOODMAN = 9
+};
+
 void Npc::init(Dialogue t_lines, int emotionNum, TextureType t_tex)
 {
 	if (t_tex == TextureType::moodman)
@@ -57,21 +71,21 @@ void NPCController::Start(int t_day)
 		// create new NPC for Today
 		m_todayNpcs.emplace_back();
 		Dialogue newLines;
-		newLines.dialogue.emplace_back("Hello");
-		newLines.dialogue.emplace_back("Welcome to the game");
-		newLines.dialogue.emplace_back("Make me Happy");
+		newLines.dialogue.emplace_back("Hello.");
+		newLines.dialogue.emplace_back("Good evening.");
+		newLines.dialogue.emplace_back("What is 'happy?'");
 
-		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 0, TextureType::moodman);
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::HAPPY, TextureType::moodman);
 
 		
 
 
 		m_todayNpcs.emplace_back();
 		newLines = Dialogue();
-		newLines.dialogue.emplace_back("Waddup");
-		newLines.dialogue.emplace_back("Make me Happy I suppose");
+		newLines.dialogue.emplace_back("Hello.");
+		newLines.dialogue.emplace_back("Can you make me happy?");
 
-		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 0, TextureType::client);
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::HAPPY, TextureType::client);
 
 	}
 
@@ -81,27 +95,357 @@ void NPCController::Start(int t_day)
 		m_todayNpcs.emplace_back();
 		Dialogue newLines;
 		newLines.dialogue.emplace_back("Hello Again");
-		newLines.dialogue.emplace_back("Im back");
-		newLines.dialogue.emplace_back("Make me Sad");
+		newLines.dialogue.emplace_back("Good evening.");
+		newLines.dialogue.emplace_back("What is 'sad'?");
 
-		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 1, TextureType::moodman);
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::SAD, TextureType::moodman);
+
+
+
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Hello...");
+		newLines.dialogue.emplace_back("Can you make me sad? Please?");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::SAD, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Hello.");
+		newLines.dialogue.emplace_back("Please make me happy.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::HAPPY, TextureType::client);
+	}
+
+	if (t_day == 2)
+	{
+		// create new NPC for Today
+		m_todayNpcs.emplace_back();
+		Dialogue newLines;
+		newLines.dialogue.emplace_back("Hello Again");
+		newLines.dialogue.emplace_back("Hello again.");
+		newLines.dialogue.emplace_back("What is 'angry'?");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::ANGRY, TextureType::moodman);
 
 
 
 
 		m_todayNpcs.emplace_back();
 		newLines = Dialogue();
-		newLines.dialogue.emplace_back("Waddup");
-		newLines.dialogue.emplace_back("Make me Sad I suppose");
+		newLines.dialogue.emplace_back("Hello.");
+		newLines.dialogue.emplace_back("Make me sad.");
 
-		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 1, TextureType::client);
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::SAD, TextureType::client);
 
 		m_todayNpcs.emplace_back();
 		newLines = Dialogue();
-		newLines.dialogue.emplace_back("Waddup");
-		newLines.dialogue.emplace_back("Make me Happy I suppose");
+		newLines.dialogue.emplace_back("Hello.");
+		newLines.dialogue.emplace_back("I want to be angry.");
 
-		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, 0, TextureType::client);
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::ANGRY, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Hi.");
+		newLines.dialogue.emplace_back("Are you able to make me happy?");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::HAPPY, TextureType::client);
+	}
+
+	if (t_day == 3)
+	{
+		// create new NPC for Today
+		m_todayNpcs.emplace_back();
+		Dialogue newLines;
+		newLines.dialogue.emplace_back("Hello Again");
+		newLines.dialogue.emplace_back("Good evening.");
+		newLines.dialogue.emplace_back("What is 'disgust'?");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::DISGUST, TextureType::moodman);
+
+
+
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Hi.");
+		newLines.dialogue.emplace_back("Make me happy.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::HAPPY, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Hello!");
+		newLines.dialogue.emplace_back("I want to be disgusted");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::DISGUST, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Greetings.");
+		newLines.dialogue.emplace_back("Make me angry. Very angry.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::ANGRY, TextureType::client);
+	}
+
+	if (t_day == 4)
+	{
+		// create new NPC for Today
+		m_todayNpcs.emplace_back();
+		Dialogue newLines;
+		newLines.dialogue.emplace_back("Hello Again");
+		newLines.dialogue.emplace_back("Good evening.");
+		newLines.dialogue.emplace_back("What is 'fear'?");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::FEAR, TextureType::moodman);
+
+
+
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("It's dark out today.");
+		newLines.dialogue.emplace_back("Make me sad, please");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::SAD, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Salutations!");
+		newLines.dialogue.emplace_back("Make me happy!");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::HAPPY, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("I don't like the look of you.");
+		newLines.dialogue.emplace_back("Make me disgusted.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::DISGUST, TextureType::client);
+	}
+
+	if (t_day == 5)
+	{
+		// create new NPC for Today
+		m_todayNpcs.emplace_back();
+		Dialogue newLines;
+		newLines.dialogue.emplace_back("Hello Again");
+		newLines.dialogue.emplace_back("Your work has been acceptable thus far. Well done.");
+		newLines.dialogue.emplace_back("What is 'faith'?");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::FAITH, TextureType::moodman);
+
+
+
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Hello.");
+		newLines.dialogue.emplace_back("Make me fearful.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::FEAR, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Good day.");
+		newLines.dialogue.emplace_back("Give me faith.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::FAITH, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Hello.");
+		newLines.dialogue.emplace_back("Make me happy.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::HAPPY, TextureType::client);
+	}
+
+	if (t_day == 6)
+	{
+		// create new NPC for Today
+		m_todayNpcs.emplace_back();
+		Dialogue newLines;
+		newLines.dialogue.emplace_back("Hello Again");
+		newLines.dialogue.emplace_back("Good evening.");
+		newLines.dialogue.emplace_back("What is 'dread'?");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::DREAD, TextureType::moodman);
+
+
+
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Listen to me.");
+		newLines.dialogue.emplace_back("I need to be angry, now.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::ANGRY, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Hi.");
+		newLines.dialogue.emplace_back("Could I be sad?");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::SAD, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Everything hurts.");
+		newLines.dialogue.emplace_back("Make me disgusted.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::DISGUST, TextureType::client);
+	}
+
+	if (t_day == 7)
+	{
+		// create new NPC for Today
+		m_todayNpcs.emplace_back();
+		Dialogue newLines;
+		newLines.dialogue.emplace_back("Hello Again");
+		newLines.dialogue.emplace_back("Do you know what time it is?");
+		newLines.dialogue.emplace_back("What is 'eccentric'?");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::ECCENTRIC, TextureType::moodman);
+
+
+
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("HELLO");
+		newLines.dialogue.emplace_back("ECCENTRIC");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::ECCENTRIC, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("...");
+		newLines.dialogue.emplace_back("..dread.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::DREAD, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("i am");
+		newLines.dialogue.emplace_back("happy");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::HAPPY, TextureType::client);
+	}
+
+	if (t_day == 8)
+	{
+		// create new NPC for Today
+		m_todayNpcs.emplace_back();
+		Dialogue newLines;
+		newLines.dialogue.emplace_back("Hello Again");
+		newLines.dialogue.emplace_back("You must be very cold.");
+		newLines.dialogue.emplace_back("What is 'falling'?");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::FALLING, TextureType::moodman);
+
+
+
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("I'm scared.");
+		newLines.dialogue.emplace_back("...fear.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::FEAR, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("He's following me.");
+		newLines.dialogue.emplace_back("Happy. I need to feel happy.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::HAPPY, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Hello.");
+		newLines.dialogue.emplace_back("Can you give me faith?");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::FAITH, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("I need...");
+		newLines.dialogue.emplace_back("Eccentricity.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::ECCENTRIC, TextureType::client);
+	}
+
+	if (t_day == 9)
+	{
+		// create new NPC for Today
+		m_todayNpcs.emplace_back();
+		Dialogue newLines;
+		newLines.dialogue.emplace_back("Hello Again");
+		newLines.dialogue.emplace_back("I hope that this will be the last time we meet.");
+		newLines.dialogue.emplace_back("What am I? Don't disappoint me.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::MOODMAN, TextureType::moodman);
+
+
+
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Him.");
+		newLines.dialogue.emplace_back("Give me him.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::MOODMAN, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("I want to be him.");
+		newLines.dialogue.emplace_back("Please, him.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::MOODMAN, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("I don't understand what's happening.");
+		newLines.dialogue.emplace_back("Fearful. Make that.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::FEAR, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Did you see him?");
+		newLines.dialogue.emplace_back("Make he him.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::MOODMAN, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Make me..");
+		newLines.dialogue.emplace_back("Sad.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::SAD, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("These times are hopeless.");
+		newLines.dialogue.emplace_back("Give me faith. I need it.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::FAITH, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("Hello. Hello.");
+		newLines.dialogue.emplace_back("Eccentric, please.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::ECCENTRIC, TextureType::client);
+
+		m_todayNpcs.emplace_back();
+		newLines = Dialogue();
+		newLines.dialogue.emplace_back("...");
+		newLines.dialogue.emplace_back("The Moodman.");
+
+		m_todayNpcs.at(m_todayNpcs.size() - 1).init(newLines, Moods::MOODMAN, TextureType::client);
 	}
 	m_currentnpc = 0;
 	bufferedText = m_todayNpcs.at(m_currentnpc).lines.dialogue.at(m_todayNpcs.at(m_currentnpc).lines.currentPos++);
@@ -260,7 +604,7 @@ void NPCController::badMask()
 {
 	Npc n;
 	Dialogue d;
-	d.dialogue.emplace_back("THAT WAS A WRONG MASK!!!!!");
+	d.dialogue.emplace_back("You were mistaken.");
 	n.init(d, -1, TextureType::moodman);
 	if (m_currentnpc >= m_todayNpcs.size())
 	{

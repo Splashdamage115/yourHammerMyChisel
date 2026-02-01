@@ -35,7 +35,7 @@
 
 #define TEXT_LETTER_DELAY 0.05f
 
-#define MAX_DAYS 2
+#define MAX_DAYS 10
 
 #define FRAME_TIME 0.3f
 
