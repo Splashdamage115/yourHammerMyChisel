@@ -19,5 +19,10 @@ private:
 	bool startButtonHovering = false;
 	bool startButtonPressed = false;
 	
+	sf::Texture tableTexture;
+	sf::Sprite tableSprite{ tableTexture };
+
+	sf::Texture standTexture;
+	sf::Sprite standSprite{ standTexture };
 };
 

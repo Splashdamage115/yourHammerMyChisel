@@ -9,6 +9,12 @@ void WinningScreen::Start()
 	winScreenSprite.setTexture(winScreenTexture);
 	winScreenSprite.setTextureRect(sf::IntRect{ sf::Vector2i{0,0}, sf::Vector2i{516,384} });
 	winScreenSprite.setScale(sf::Vector2f{ 4.0f, 4.0f });
+
+	continueText.setString("PRESS ENTER TO CONTINUE...");
+	continueText.setFillColor(sf::Color{ 255 });
+	continueText.setOutlineColor(sf::Color{ 0 });
+	continueText.setPosition(sf::Vector2f{ 100,100 });
+	continueText.setCharacterSize(32);
 }
 
 void WinningScreen::Update()
@@ -22,4 +28,5 @@ void WinningScreen::Update()
 void WinningScreen::Render(sf::RenderWindow& t_window)
 {
 	t_window.draw(winScreenSprite);
+	t_window.draw(continueText);
 }

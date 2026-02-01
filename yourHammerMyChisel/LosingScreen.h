@@ -12,5 +12,7 @@ public:
 private:
 	sf::Texture loseScreenTexture;
 	sf::Sprite loseScreenSprite{ loseScreenTexture };
+
+	sf::Text continueText{ Game::m_jerseyFont };
 };
 
