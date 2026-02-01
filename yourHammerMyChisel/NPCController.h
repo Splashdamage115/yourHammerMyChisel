@@ -2,12 +2,20 @@
 
 #include "Library.h"
 #include "AnimatedSprite.h"
+#include "Mask.h"
 
 struct Dialogue
 {
 	std::vector<std::string> dialogue;
 	int currentPos = 0;
 };
+struct copyMask
+{
+	void setPos(sf::Vector2f t_newPos);
+	sf::Texture maskTex;
+	std::vector<sf::Sprite> maskPixel;
+};
+
 
 class Npc
 {
@@ -19,8 +27,11 @@ public:
 	std::shared_ptr<Sprite> m_body;
 
 	float standPos = 128.f;
-
+	copyMask m_mask;
+	bool maskActive = false;
 };
+
+
 
 class NPCController
 {
@@ -29,7 +40,7 @@ public:
 	void Start(int t_day);
 	void Update();
 	void Render(sf::RenderWindow& t_window);
-	void recieveMask(bool loss);
+	void recieveMask(bool loss, maskStruct t_mask);
 	void badMask();
 
 	int currentEmotionNum = 0;
@@ -57,6 +68,8 @@ private:
 
 	sf::Texture maskT;
 	sf::Texture hammerT;
+
+	sf::Texture pixelTex;
 
 	bool itemDropped = false;
 };

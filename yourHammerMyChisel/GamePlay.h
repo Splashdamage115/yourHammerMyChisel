@@ -35,10 +35,10 @@ public:
 	static int currentEmotion;
 	static AnimatedSprite anims;
 
-	static Cursor cursors; // cstan
 
 	static bool hammerGone;
 private:
+	Cursor cursors; // cstan
 	ToolSelector m_chiselToolSlot;
 	ToolSelector m_brushToolSlot;
 	Mask m_mask;
@@ -66,5 +66,7 @@ private:
 	std::shared_ptr<Sprite> m_bg;
 
 	bool lost = false;
+
+	bool mouseVisible = true;
 };
 

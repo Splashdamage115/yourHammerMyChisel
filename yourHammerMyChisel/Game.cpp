@@ -9,6 +9,8 @@ std::shared_ptr<GameState>Game::m_gameState;
 
 void Game::changeGameState(std::shared_ptr<GameState> t_newGameState)
 {
+
+	m_window.setMouseCursorVisible(true);
 	m_gameState = t_newGameState;
 
 	m_gameState->Start();

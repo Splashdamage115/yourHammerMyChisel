@@ -12,6 +12,8 @@ void Cursor::Start()
 	cursorSprite.setScale(sf::Vector2f{ 4.0f, 4.0f });
 	cursorSprite.setOrigin(sf::Vector2f{ 0.0f, 21.0f });
 	cursorSprite.setTextureRect(sf::IntRect{ sf::Vector2i{0, 0}, sf::Vector2i{22, 21} });
+
+	
 }
 
 void Cursor::Update()
@@ -27,6 +29,10 @@ void Cursor::Update()
 	else if (GamePlay::heldTool == Tool::none)
 	{
 		cursorSprite.setTextureRect(sf::IntRect{ sf::Vector2i{0, 0}, sf::Vector2i{22, 21} });
+		if (Game::mousePosition.x < LEFT_MIN)
+		{
+			cursorSprite.setTextureRect(sf::IntRect{ sf::Vector2i{66, 0}, sf::Vector2i{22, 21} });
+		}
 	}
 
 	cursorSprite.setPosition(Game::mousePosition);

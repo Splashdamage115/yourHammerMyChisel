@@ -58,6 +58,7 @@ void GamePlay::Start()
 
 	overlay.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	overlay.setFillColor(sf::Color::Transparent);
+	cursors.Start();
 }
 
 void GamePlay::Update()
@@ -117,10 +118,19 @@ void GamePlay::Update()
 	m_brushToolSlot.Update();
 	if(!hammerGone)
 		m_chiselToolSlot.Update();
+
+	cursors.Update();
+
 }
 
 void GamePlay::Render(sf::RenderWindow& t_window)
 {
+	if (mouseVisible)
+	{
+		t_window.setMouseCursorVisible(false);
+		mouseVisible = false;
+	}
+
 	t_window.draw(m_bg->sprite);
 	m_npcs.Render(t_window);
 	t_window.draw(standSprite);
@@ -155,6 +165,8 @@ void GamePlay::Render(sf::RenderWindow& t_window)
 		t_window.draw(overlay);
 	}
 	t_window.draw(m_npcs.renderedText);
+	cursors.Render(t_window);
+
 }
 
 void GamePlay::setNewHeldType(ItemBeingHeld t_newType)

@@ -1,6 +1,7 @@
 #include "Mask.h"
 #include "Game.h"
 #include "GamePlay.h"
+#include "NPCController.h"
 
 sf::Color MaskPixel::maskColor = sf::Color(255, 255, 255);
 
@@ -61,13 +62,13 @@ void Mask::DroppedMask()
 		}
 		else
 		{
-			npc->recieveMask(true);
+			npc->recieveMask(true, editableMask);
 			return;
 		}
 	}
 
 	// good mask created
-	npc->recieveMask(false);
+	npc->recieveMask(false, editableMask);
 
 	//editableMask = maskStruct(miniMaskT);
 	//editableMask.initMask();
@@ -78,6 +79,10 @@ void Mask::SpawnMask()
 {
 	editableMask = maskStruct(miniMaskT, maskTile);
 	editableMask.initMask(maskTile);
+}
+
+maskStruct::maskStruct() : miniMask(maskTile)
+{
 }
 
 maskStruct::maskStruct(sf::Texture& t_texture, sf::Texture& t_textureTile) : miniMask(t_texture)
@@ -280,6 +285,15 @@ bool maskStruct::update()
 	return false;
 }
 
+void maskStruct::setMaskPos(sf::Vector2f t_newPos)
+{
+	sf::Vector2f newPos = m_pixels.at(0).pixel.getPosition() - t_newPos;
+	for (int i = 0; i < m_pixels.size(); i++)
+	{
+		m_pixels.at(i).setNewPositionOffset(newPos);
+	}
+}
+
 void maskStruct::initMask(sf::Texture& t_textureTile)
 {
 	std::vector<sf::Vector2i> skipNums =
@@ -346,6 +360,12 @@ void maskStruct::renderMask(sf::RenderWindow& t_window)
 	{
 		t_window.draw(miniMask);
 	}
+}
+
+void maskStruct::setNewSize(sf::Vector2f t_newScale)
+{
+	//m_pixels.at(m_pixels.size() - 1).pixel.setPosition(sf::Vector2f(((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET) * x) + MASK_START_X, ((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET - 28) * y) + MASK_START_Y));
+	//m_pixels.at(m_pixels.size() - 1).pixel.setScale(sf::Vector2f(4.0f, 4.0f));
 }
 
 bool MaskPixel::checkMouse()
