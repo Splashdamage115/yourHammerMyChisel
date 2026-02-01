@@ -23,6 +23,15 @@ void WinningScreen::Update()
 	{
 		Game::getInstance().changeGameState(std::make_shared<GamePlay>());
 	}
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	{
+		mouseDown = true;
+	}
+	if (mouseDown && !sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	{
+		Game::getInstance().changeGameState(std::make_shared<GamePlay>());
+		return;
+	}
 }
 
 void WinningScreen::Render(sf::RenderWindow& t_window)

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Library.h"
-#include "NPCController.h"
+
+class NPCController;
 
 struct MaskPixel
 {
@@ -19,6 +20,7 @@ struct MaskPixel
 
 struct maskStruct
 {
+	maskStruct();
 	maskStruct(sf::Texture& t_texture, sf::Texture& t_textureTile);
 	bool operator==(const maskStruct& t_rhs);
 
@@ -28,8 +30,12 @@ struct maskStruct
 	// return true if the mask was given to the npc
 	bool update();
 
+	void setMaskPos(sf::Vector2f t_newPos);
+
 	void initMask(sf::Texture& t_textureTile);
 	void renderMask(sf::RenderWindow& t_window);
+
+	void setNewSize(sf::Vector2f t_newScale);
 
 	bool drawMask = true;
 	sf::Texture maskTile;

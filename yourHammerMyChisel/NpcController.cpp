@@ -38,6 +38,8 @@ void Npc::init(Dialogue t_lines, int emotionNum, TextureType t_tex)
 
 NPCController::NPCController() : renderedText(Game::m_jerseyFont)
 {
+	pixelTex.loadFromFile("./ASSETS/IMAGES/MaskPixel1.png");
+
 	if (!maskT.loadFromFile("./ASSETS/IMAGES/stand_mask1.png"))
 	{
 		DEBUG_MSG("couldnt load table");
@@ -515,7 +517,14 @@ void NPCController::Update()
 		}
 		else
 		{
-			if (m_currentnpc > 0)m_todayNpcs.at(m_currentnpc - 1).m_body->sprite.move(sf::Vector2f(300.f * Game::deltaTime, 0.0f));
+			if (m_currentnpc > 0)
+			{
+				m_todayNpcs.at(m_currentnpc - 1).m_body->sprite.move(sf::Vector2f(300.f * Game::deltaTime, 0.0f));
+				if (m_todayNpcs.at(m_currentnpc - 1).maskActive)
+				{
+					m_todayNpcs.at(m_currentnpc - 1).m_mask.setPos(sf::Vector2f(300.f * Game::deltaTime, 0.0f));
+				}
+			}
 			if (m_currentnpc < m_todayNpcs.size())m_todayNpcs.at(m_currentnpc).m_body->sprite.move(sf::Vector2f(200.f * Game::deltaTime, 0.0f));
 		}
 	}
@@ -566,13 +575,22 @@ void NPCController::Update()
 void NPCController::Render(sf::RenderWindow& t_window)
 {
 
-	if(m_currentnpc > 0) t_window.draw(m_todayNpcs.at(m_currentnpc - 1).m_body->sprite);
+	if (m_currentnpc > 0) { 
+		t_window.draw(m_todayNpcs.at(m_currentnpc - 1).m_body->sprite);
+
+		if (m_todayNpcs.at(m_currentnpc - 1).maskActive)
+		{
+			for (int i = 0; i < m_todayNpcs.at(m_currentnpc - 1).m_mask.maskPixel.size(); i++)
+				t_window.draw(m_todayNpcs.at(m_currentnpc - 1).m_mask.maskPixel.at(i));
+		}
+	}
 	if (m_currentnpc < m_todayNpcs.size())
 	{
 		if(m_todayNpcs.at(m_currentnpc).m_body != nullptr)
 			try
 			{
 				t_window.draw(m_todayNpcs.at(m_currentnpc).m_body->sprite);
+				
 			}
 			catch(std::exception t)
 			{
@@ -588,8 +606,34 @@ void NPCController::Render(sf::RenderWindow& t_window)
 	//}
 }
 
-void NPCController::recieveMask(bool loss)
+void NPCController::recieveMask(bool loss, maskStruct t_mask)
 {
+	//m_todayNpcs.at(m_currentnpc).m_mask = t_mask;
+
+		for (int y = 0;y < WASK_HEIGHT; y++)
+		{
+			for (int x = 0; x < MASK_WIDTH; x++)
+			{
+			int i = (y * MASK_WIDTH) + x;
+			//DEBUG_MSG(i);
+			if (t_mask.m_pixels.at(i).cut) continue;
+
+			m_todayNpcs.at(m_currentnpc).m_mask.maskPixel.emplace_back(pixelTex);
+
+			m_todayNpcs.at(m_currentnpc).m_mask.maskPixel.at(m_todayNpcs.at(m_currentnpc).m_mask.maskPixel.size() - 1).setTexture(pixelTex);
+			m_todayNpcs.at(m_currentnpc).m_mask.maskPixel.at(m_todayNpcs.at(m_currentnpc).m_mask.maskPixel.size() - 1).setPosition(
+			sf::Vector2f(((MASK_PIXEL_SIZE / 4.f) * x), (((MASK_PIXEL_SIZE - 28) / 4.f) * y)) + sf::Vector2f(400.f,350.f));
+			m_todayNpcs.at(m_currentnpc).m_mask.maskPixel.at(m_todayNpcs.at(m_currentnpc).m_mask.maskPixel.size() - 1).setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(pixelTex.getSize().x, pixelTex.getSize().y)));
+			//m_pixels.at(m_pixels.size() - 1).pixel.setTexture(t_textureTile);
+			//m_pixels.at(m_pixels.size() - 1).pixel.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(t_textureTile.getSize().x, t_textureTile.getSize().y)));
+			//m_pixels.at(m_pixels.size() - 1).pixel.setPosition(sf::Vector2f(((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET) * x) + MASK_START_X, ((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET - 28) * y) + MASK_START_Y));
+			//m_pixels.at(m_pixels.size() - 1).pixel.setScale(sf::Vector2f(4.0f, 4.0f));
+		}
+	}
+
+	//m_todayNpcs.at(m_currentnpc).m_mask.
+	m_todayNpcs.at(m_currentnpc).maskActive = true;
+
 	m_currentnpc++;
 
 	if (loss) badMask();
@@ -614,5 +658,13 @@ void NPCController::badMask()
 	{
 		m_todayNpcs.at(m_currentnpc) = n;
 
+	}
+}
+
+void copyMask::setPos(sf::Vector2f t_newPos)
+{
+	for (int i = 0; i < maskPixel.size(); i++)
+	{
+		maskPixel.at(i).setPosition(maskPixel.at(i).getPosition() + t_newPos);
 	}
 }

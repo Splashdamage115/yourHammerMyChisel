@@ -16,6 +16,6 @@ private:
 	sf::Sprite winScreenSprite{ winScreenTexture };
 
 	sf::Text continueText{ Game::m_jerseyFont };
-
+	bool mouseDown = false;
 };
 
