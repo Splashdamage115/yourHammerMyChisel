@@ -29,7 +29,8 @@ public:
 	void Start(int t_day);
 	void Update();
 	void Render(sf::RenderWindow& t_window);
-	void recieveMask();
+	void recieveMask(bool loss);
+	void badMask();
 
 	int currentEmotionNum = 0;
 	sf::Text renderedText;

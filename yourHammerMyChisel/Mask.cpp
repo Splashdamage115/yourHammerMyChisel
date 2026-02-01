@@ -46,6 +46,8 @@ void Mask::Render(sf::RenderWindow& t_window)
 
 void Mask::DroppedMask()
 {
+	DEBUG_MSG("GAVE MASK TO NPC");
+
 	GamePlay::hammerGone = true;
 	if (npc->currentEmotionNum >= savedMasks.size())
 	{
@@ -59,17 +61,17 @@ void Mask::DroppedMask()
 		}
 		else
 		{
-			// bad mask created
+			npc->recieveMask(true);
+			return;
 		}
 	}
 
 	// good mask created
-	npc->recieveMask();
+	npc->recieveMask(false);
 
 	//editableMask = maskStruct(miniMaskT);
 	//editableMask.initMask();
 	
-	DEBUG_MSG("GAVE MASK TO NPC");
 }
 
 void Mask::SpawnMask()

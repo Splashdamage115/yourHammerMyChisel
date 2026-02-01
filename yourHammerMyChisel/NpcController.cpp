@@ -133,6 +133,11 @@ void NPCController::Update()
 				{
 					// end of dialogue
 					waitTillNextChar = 999999999.f;
+
+					if(currentEmotionNum == -1)
+					{
+						Game::m_gameState->EndDay(currentEmotionNum == -1);
+					}
 				}
 				else
 				{
@@ -160,9 +165,9 @@ void NPCController::Update()
 
 			currentEmotionNum = m_todayNpcs.at(m_currentnpc).m_emotionNum;
 		}
-		else if (m_currentnpc == m_todayNpcs.size())
+		else if (m_currentnpc == m_todayNpcs.size() || (currentEmotionNum == -1 && !writeText))
 		{
-			Game::m_gameState->EndDay();
+			Game::m_gameState->EndDay(currentEmotionNum == -1);
 		}
 		else
 		{
@@ -171,7 +176,7 @@ void NPCController::Update()
 		}
 	}
 
-	if (ToolsDropped)
+	if (ToolsDropped && currentEmotionNum != -1)
 	{
 		waitForSecondItemDrop -= Game::deltaTime;
 
@@ -239,10 +244,29 @@ void NPCController::Render(sf::RenderWindow& t_window)
 	//}
 }
 
-void NPCController::recieveMask()
+void NPCController::recieveMask(bool loss)
 {
 	m_currentnpc++;
 
+	if (loss) badMask();
+
 	waitingForNpc = true;
 
+}
+
+void NPCController::badMask()
+{
+	Npc n;
+	Dialogue d;
+	d.dialogue.emplace_back("THAT WAS A WRONG MASK!!!!!");
+	n.init(d, -1, TextureType::moodman);
+	if (m_currentnpc >= m_todayNpcs.size())
+	{
+		m_todayNpcs.emplace_back(n);
+	}
+	else
+	{
+		m_todayNpcs.at(m_currentnpc) = n;
+
+	}
 }

@@ -26,7 +26,7 @@ public:
 	virtual void Update();
 	virtual void Render(sf::RenderWindow& t_window);
 	static void setNewHeldType(ItemBeingHeld t_newType);
-	virtual void EndDay()override;
+	virtual void EndDay(bool badEnd)override;
 
 	static Tool heldTool;
 	static ItemBeingHeld itemHeld;
@@ -61,5 +61,7 @@ private:
 
 
 	std::shared_ptr<Sprite> m_bg;
+
+	bool lost = false;
 };
 

@@ -1,6 +1,7 @@
 #include "GamePlay.h"
 #include "Game.h"
 #include "WinningScreen.h"
+#include "LosingScreen.h"
 
 Tool GamePlay::heldTool = Tool::none;
 ItemBeingHeld GamePlay::itemHeld = ItemBeingHeld::none;
@@ -83,6 +84,12 @@ void GamePlay::Update()
 					Game::getInstance().changeGameState(std::make_shared<WinningScreen>());
 					return;
 				}
+				else if (lost)
+				{
+					DEBUG_MSG("YOU HAVE LOST THE GAME!");
+					Game::getInstance().changeGameState(std::make_shared<LosingScreen>());
+					return;
+				}
 				else
 				{
 					m_npcs.Start(currentDay);
@@ -93,7 +100,7 @@ void GamePlay::Update()
 				opacity = 0.0f;
 				transitionNewDay = false;
 			}
-			overlay.setFillColor(sf::Color(0, 0, 0, 255 * opacity));
+			overlay.setFillColor(sf::Color(overlay.getFillColor().r, 0, 0, 255 * opacity));
 		}
 	}
 	if (pageOnTop)
@@ -163,9 +170,20 @@ void GamePlay::setNewHeldType(ItemBeingHeld t_newType)
 	}
 }
 
-void GamePlay::EndDay()
+void GamePlay::EndDay(bool badEnd)
 {
-	if (!transitionNewDay)
+	if (badEnd)
+	{
+		Transition = 0.5f;
+		delayLeft = 0.f;
+
+		overlay.setFillColor(sf::Color(255, 0, 0, 0));
+
+		DEBUG_MSG("YOU HAVE LOST THE GAME!");
+
+		lost = true;
+	}
+	else if (!transitionNewDay)
 	{
 		currentDay++;
 		Transition = 0.5f;
