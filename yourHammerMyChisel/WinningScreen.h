@@ -15,5 +15,7 @@ private:
 	sf::Texture winScreenTexture;
 	sf::Sprite winScreenSprite{ winScreenTexture };
 
+	sf::Text continueText{ Game::m_jerseyFont };
+
 };
 
