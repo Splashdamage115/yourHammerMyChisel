@@ -51,6 +51,7 @@ private:
 
 
 	sf::RectangleShape overlay;
+	sf::Text m_dayText;
 	bool transitionNewDay = false;
 	float opacity = 0.0f;
 	float Transition = 0.5f;

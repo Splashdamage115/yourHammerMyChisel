@@ -11,7 +11,7 @@ int GamePlay::currentEmotion = 0;
 AnimatedSprite GamePlay::anims;
 bool GamePlay::hammerGone = true;
 
-GamePlay::GamePlay() : tableSprite(tableTexture), standSprite(standTexture)
+GamePlay::GamePlay() : tableSprite(tableTexture), standSprite(standTexture), m_dayText(Game::m_jerseyFont)
 {
 }
 
@@ -46,7 +46,10 @@ void GamePlay::Start()
 	m_bg = anims.getSprite(TextureType::bg);
 	m_bg->sprite.setPosition(sf::Vector2f(132.0f, 128.0f));
 
-
+	m_dayText.setString("");
+	m_dayText.setFillColor(sf::Color::White);
+	m_dayText.setCharacterSize(128u);
+	m_dayText.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f));
 
 	m_npcBox.setSize(sf::Vector2f(LEFT_MIN, SCREEN_HEIGHT));
 
@@ -78,7 +81,9 @@ void GamePlay::Update()
 				opacity = 1.0f;
 				Transition = Transition * -1;
 				delayLeft = 2.0f;
-
+				m_dayText.setString("DAY : " + std::to_string(currentDay + 1));
+				
+				m_dayText.setPosition(sf::Vector2f((SCREEN_WIDTH - m_dayText.getGlobalBounds().size.x) / 2.f, (SCREEN_HEIGHT - m_dayText.getGlobalBounds().size.y) / 2.f));
 				if (currentDay >= MAX_DAYS)
 				{
 					DEBUG_MSG("YOU HAVE WON THE GAME!");
@@ -100,8 +105,11 @@ void GamePlay::Update()
 			{
 				opacity = 0.0f;
 				transitionNewDay = false;
+				m_dayText.setString("");
+
 			}
 			overlay.setFillColor(sf::Color(overlay.getFillColor().r, 0, 0, 255 * opacity));
+			m_dayText.setFillColor(sf::Color(255, 255, 255, 255 * opacity));
 		}
 	}
 	if (pageOnTop)
@@ -163,10 +171,11 @@ void GamePlay::Render(sf::RenderWindow& t_window)
 	if (transitionNewDay)
 	{
 		t_window.draw(overlay);
+		t_window.draw(m_dayText);
 	}
 	t_window.draw(m_npcs.renderedText);
 	cursors.Render(t_window);
-
+	
 }
 
 void GamePlay::setNewHeldType(ItemBeingHeld t_newType)
