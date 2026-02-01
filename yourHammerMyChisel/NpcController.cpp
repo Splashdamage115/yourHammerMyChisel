@@ -21,6 +21,7 @@ void Npc::init(Dialogue t_lines, int emotionNum, TextureType t_tex)
 	if (t_tex == TextureType::moodman)
 	{
 		standPos = -32.f;
+		moodman = true;
 	}
 	else
 	{
@@ -649,6 +650,16 @@ void NPCController::recieveMask(bool loss, maskStruct t_mask)
 	if (loss) badMask();
 
 	waitingForNpc = true;
+
+	if (m_todayNpcs.at(m_currentnpc).moodman)
+	{
+		moodmanEntrySound.play();
+	}
+	else
+	{
+		clientEntrySound.play();
+	}
+
 	bufferedText.clear();
 	currentText.clear();
 	textPosition = 0;

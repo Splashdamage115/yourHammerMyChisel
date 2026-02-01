@@ -29,6 +29,8 @@ public:
 	float standPos = 128.f;
 	copyMask m_mask;
 	bool maskActive = false;
+
+	bool moodman = false;
 };
 
 
