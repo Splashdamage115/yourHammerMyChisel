@@ -2,30 +2,53 @@
 #include "Game.h"
 #include "GamePlay.h"
 
-sf::Color MaskPixel::maskColor = sf::Color(255, 236, 165);
+sf::Color MaskPixel::maskColor = sf::Color(255, 255, 255);
+
+Mask::Mask() : editableMask(miniMaskT, maskTile)
+{
+}
 
 void Mask::Start(NPCController& t_npc)
 {
+	if (!miniMaskT.loadFromFile("./ASSETS/IMAGES/stand_mask.png"))
+	{
+		DEBUG_MSG("couldnt load stand_mask");
+	}
+	if (!maskTile.loadFromFile("./ASSETS/IMAGES/MaskPixel.png"))
+	{
+		DEBUG_MSG("couldnt load MaskPixel");
+	}
+	//editableMask = maskStruct(miniMaskT);
 	npc = &t_npc;
-	editableMask.initMask();
+	//editableMask.initMask();
 }
 
 void Mask::update()
 {
-	
-	if (editableMask.update())
+	if (npc->pickedUpMask)
 	{
+		SpawnMask();
+		npc->pickedUpMask = false;
+		noMask = false;
+	}
+	if (!noMask && editableMask.update())
+	{
+		noMask = true;
 		DroppedMask();
 	}
 }
 
 void Mask::Render(sf::RenderWindow& t_window)
 {
-	editableMask.renderMask(t_window);
+	if(!noMask)
+		editableMask.renderMask(t_window);
 }
 
 void Mask::DroppedMask()
 {
+	DEBUG_MSG("GAVE MASK TO NPC");
+
+	GamePlay::hammerGone = true;
 	if (npc->currentEmotionNum >= savedMasks.size())
 	{
 		savedMasks.push_back(editableMask);
@@ -38,27 +61,30 @@ void Mask::DroppedMask()
 		}
 		else
 		{
-			// bad mask created
+			npc->recieveMask(true);
+			return;
 		}
 	}
 
 	// good mask created
-	npc->recieveMask();
+	npc->recieveMask(false);
 
-	editableMask = maskStruct();
-	editableMask.initMask();
+	//editableMask = maskStruct(miniMaskT);
+	//editableMask.initMask();
 	
-	DEBUG_MSG("GAVE MASK TO NPC");
 }
 
-maskStruct::maskStruct() : miniMask(miniMaskT)
+void Mask::SpawnMask()
 {
-	if (!miniMaskT.loadFromFile("./ASSETS/IMAGES/stand_mask.png"))
-	{
-		DEBUG_MSG("couldnt load stand_mask");
-	}
-	miniMask.setTexture(miniMaskT);
-	miniMask.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(miniMaskT.getSize().x, miniMaskT.getSize().y)));
+	editableMask = maskStruct(miniMaskT, maskTile);
+	editableMask.initMask(maskTile);
+}
+
+maskStruct::maskStruct(sf::Texture& t_texture, sf::Texture& t_textureTile) : miniMask(t_texture)
+{
+	//maskTile = t_textureTile;
+	miniMask.setTexture(t_texture);
+	miniMask.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(t_texture.getSize().x, t_texture.getSize().y)));
 	miniMask.setPosition(sf::Vector2f(-100000.f, 0.0f));
 	miniMask.setScale(sf::Vector2f(4.0f, 4.0f));
 }
@@ -82,6 +108,14 @@ bool maskStruct::operator==(const maskStruct& t_rhs)
 
 bool maskStruct::update()
 {
+	moveDownTimeLeft -= Game::deltaTime;
+	if (moveDownTimeLeft > 0.0f)
+	{
+		for (int i = 0; i < m_pixels.size(); i++)
+		{
+			m_pixels.at(i).setNewPositionOffset(sf::Vector2f(0.0f, 2000.0f * Game::deltaTime));
+		}
+	}
 	bool mouseInside = false;
 	for (int i = 0; i < m_pixels.size(); i++)
 	{
@@ -175,12 +209,14 @@ bool maskStruct::update()
 	return false;
 }
 
-void maskStruct::initMask()
+void maskStruct::initMask(sf::Texture& t_textureTile)
 {
 	std::vector<sf::Vector2i> skipNums =
 	{
 		{0,0}, {0,1}, {1,0}, {MASK_WIDTH - 1 , 0}, {MASK_WIDTH - 1 , 1}, {MASK_WIDTH - 2 , 0},
-		{0,WASK_HEIGHT - 1}, {0,WASK_HEIGHT - 2}, {1,WASK_HEIGHT - 1}, {MASK_WIDTH - 1,WASK_HEIGHT - 1}, {MASK_WIDTH - 1,WASK_HEIGHT - 2}, {MASK_WIDTH - 2,WASK_HEIGHT - 1}
+		{0,WASK_HEIGHT - 1}, {0,WASK_HEIGHT - 2}, {1,WASK_HEIGHT - 1}, {MASK_WIDTH - 1,WASK_HEIGHT - 1}, {MASK_WIDTH - 1,WASK_HEIGHT - 2}, {MASK_WIDTH - 2,WASK_HEIGHT - 1},
+		{ 0,WASK_HEIGHT - 3}, {0,WASK_HEIGHT - 4}, {0,WASK_HEIGHT - 5}, {MASK_WIDTH - 1,WASK_HEIGHT - 3},{MASK_WIDTH - 1,WASK_HEIGHT - 4},{MASK_WIDTH - 1,WASK_HEIGHT - 5},
+		{ 1,WASK_HEIGHT - 2}, {0,WASK_HEIGHT - 3}, {MASK_WIDTH - 1,WASK_HEIGHT - 2},{MASK_WIDTH - 1,WASK_HEIGHT - 3},
 	};
 
 	for (int y = 0; y < WASK_HEIGHT; y++)
@@ -197,15 +233,21 @@ void maskStruct::initMask()
 			if (found) continue;
 
 			m_pixels.emplace_back();
-			m_pixels.at(m_pixels.size() - 1).pixel.setSize(sf::Vector2f(MASK_PIXEL_SIZE, MASK_PIXEL_SIZE));
-			m_pixels.at(m_pixels.size() - 1).pixel.setFillColor(MaskPixel::maskColor);
-			m_pixels.at(m_pixels.size() - 1).pixel.setPosition(sf::Vector2f(((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET) * x) + MASK_START_X, ((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET) * y) + MASK_START_Y));
-			m_pixels.at(m_pixels.size() - 1).pixel.setOutlineColor(sf::Color(0,0,0,255));
-			m_pixels.at(m_pixels.size() - 1).pixel.setOutlineThickness(1u);
+
+			m_pixels.at(m_pixels.size() - 1).pixel.setTexture(t_textureTile);
+			m_pixels.at(m_pixels.size() - 1).pixel.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(t_textureTile.getSize().x, t_textureTile.getSize().y)));
+			m_pixels.at(m_pixels.size() - 1).pixel.setPosition(sf::Vector2f(((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET) * x) + MASK_START_X, ((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET - 28) * y) + MASK_START_Y));
+			m_pixels.at(m_pixels.size() - 1).pixel.setScale(sf::Vector2f(4.0f, 4.0f));
+
+			//m_pixels.at(m_pixels.size() - 1).pixel.setSize(sf::Vector2f(MASK_PIXEL_SIZE, MASK_PIXEL_SIZE));
+			//m_pixels.at(m_pixels.size() - 1).pixel.setFillColor(MaskPixel::maskColor);
+			//m_pixels.at(m_pixels.size() - 1).pixel.setPosition();
+			//m_pixels.at(m_pixels.size() - 1).pixel.setOutlineColor(sf::Color(0,0,0,255));
+			//m_pixels.at(m_pixels.size() - 1).pixel.setOutlineThickness(1u);
 
 			m_pixels.at(m_pixels.size() - 1).shadow.setSize(sf::Vector2f(MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET, MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET));
 			m_pixels.at(m_pixels.size() - 1).shadow.setFillColor(sf::Color(0, 0, 0, 80));
-			m_pixels.at(m_pixels.size() - 1).shadow.setPosition(sf::Vector2f(((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET) * x) + MASK_START_X + MASK_SHADOW_OFFSET_X, ((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET) * y) + MASK_START_Y + MASK_SHADOW_OFFSET_Y));
+			m_pixels.at(m_pixels.size() - 1).shadow.setPosition(sf::Vector2f(((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET) * x) + MASK_START_X + MASK_SHADOW_OFFSET_X, ((MASK_PIXEL_SIZE + MASK_PIXEL_OFFSET - 28) * y) + MASK_START_Y + MASK_SHADOW_OFFSET_Y));
 		}
 	}
 
@@ -241,7 +283,7 @@ bool MaskPixel::checkMouse()
 	{
 		if (GamePlay::heldTool == Tool::Chisel)
 		{
-			pixel.setFillColor(sf::Color(255, 255, 255, 125));
+			pixel.setColor(sf::Color(255, 255, 255, 125));
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			{
 				cut = true;
@@ -251,7 +293,7 @@ bool MaskPixel::checkMouse()
 	}
 	else
 	{
-		pixel.setFillColor(maskColor);
+		pixel.setColor(maskColor);
 		return false;
 	}
 }

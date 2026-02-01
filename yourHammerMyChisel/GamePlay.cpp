@@ -1,6 +1,7 @@
 #include "GamePlay.h"
 #include "Game.h"
 #include "WinningScreen.h"
+#include "LosingScreen.h"
 
 Tool GamePlay::heldTool = Tool::none;
 ItemBeingHeld GamePlay::itemHeld = ItemBeingHeld::none;
@@ -8,6 +9,7 @@ bool GamePlay::pageOnTop = false;
 sf::RectangleShape GamePlay::m_npcBox;
 int GamePlay::currentEmotion = 0;
 AnimatedSprite GamePlay::anims;
+bool GamePlay::hammerGone = true;
 
 GamePlay::GamePlay() : tableSprite(tableTexture), standSprite(standTexture)
 {
@@ -51,8 +53,8 @@ void GamePlay::Start()
 	m_npcs.Start(0);
 	m_page.Start();
 	m_mask.Start(m_npcs);
-	m_brushToolSlot.Start(Tool::Brush, sf::Vector2f(1500.f, 0.f));
-	m_chiselToolSlot.Start(Tool::Chisel, sf::Vector2f(1700.f, 0.f));
+	m_brushToolSlot.Start(Tool::Brush, sf::Vector2f(1240.f, 70.f));
+	m_chiselToolSlot.Start(Tool::Chisel, sf::Vector2f(1550.f, 70.f));
 
 	overlay.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	overlay.setFillColor(sf::Color::Transparent);
@@ -82,6 +84,12 @@ void GamePlay::Update()
 					Game::getInstance().changeGameState(std::make_shared<WinningScreen>());
 					return;
 				}
+				else if (lost)
+				{
+					DEBUG_MSG("YOU HAVE LOST THE GAME!");
+					Game::getInstance().changeGameState(std::make_shared<LosingScreen>());
+					return;
+				}
 				else
 				{
 					m_npcs.Start(currentDay);
@@ -92,7 +100,7 @@ void GamePlay::Update()
 				opacity = 0.0f;
 				transitionNewDay = false;
 			}
-			overlay.setFillColor(sf::Color(0, 0, 0, 255 * opacity));
+			overlay.setFillColor(sf::Color(overlay.getFillColor().r, 0, 0, 255 * opacity));
 		}
 	}
 	if (pageOnTop)
@@ -107,7 +115,8 @@ void GamePlay::Update()
 	}
 	m_npcs.Update();
 	m_brushToolSlot.Update();
-	m_chiselToolSlot.Update();
+	if(!hammerGone)
+		m_chiselToolSlot.Update();
 }
 
 void GamePlay::Render(sf::RenderWindow& t_window)
@@ -115,7 +124,17 @@ void GamePlay::Render(sf::RenderWindow& t_window)
 	t_window.draw(m_bg->sprite);
 	m_npcs.Render(t_window);
 	t_window.draw(standSprite);
+	if (m_npcs.ToolsDropped)
+	{
+		t_window.draw(m_npcs.hammer);
+
+		t_window.draw(m_npcs.mask);
+	}
 	t_window.draw(tableSprite);
+
+	m_brushToolSlot.Render(t_window);
+	if (!hammerGone)
+		m_chiselToolSlot.Render(t_window);
 
 	//t_window.draw(m_npcBox);
 	if (pageOnTop)
@@ -128,8 +147,7 @@ void GamePlay::Render(sf::RenderWindow& t_window)
 		m_page.Render(t_window);
 		m_mask.Render(t_window);
 	}
-	m_brushToolSlot.Render(t_window);
-	m_chiselToolSlot.Render(t_window);
+
 
 
 	if (transitionNewDay)
@@ -152,9 +170,20 @@ void GamePlay::setNewHeldType(ItemBeingHeld t_newType)
 	}
 }
 
-void GamePlay::EndDay()
+void GamePlay::EndDay(bool badEnd)
 {
-	if (!transitionNewDay)
+	if (badEnd)
+	{
+		Transition = 0.5f;
+		delayLeft = 0.f;
+
+		overlay.setFillColor(sf::Color(255, 0, 0, 0));
+
+		DEBUG_MSG("YOU HAVE LOST THE GAME!");
+
+		lost = true;
+	}
+	else if (!transitionNewDay)
 	{
 		currentDay++;
 		Transition = 0.5f;

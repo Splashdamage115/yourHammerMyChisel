@@ -6,7 +6,8 @@ struct BookPixels
 {
 	std::vector<sf::RectangleShape> m_pixels;
 	std::vector<bool> drawn;
-	sf::RectangleShape collisionBox;
+	sf::Sprite collisionBox{ texture };
+	sf::Texture texture;
 	sf::RectangleShape shadow;
 	void setNewPositionOffset(sf::Vector2f t_newVector);
 	bool colliding();

@@ -26,13 +26,15 @@ public:
 	virtual void Update();
 	virtual void Render(sf::RenderWindow& t_window);
 	static void setNewHeldType(ItemBeingHeld t_newType);
-	virtual void EndDay()override;
+	virtual void EndDay(bool badEnd)override;
 
 	static Tool heldTool;
 	static ItemBeingHeld itemHeld;
 	static sf::RectangleShape m_npcBox;
 	static int currentEmotion;
 	static AnimatedSprite anims;
+
+	static bool hammerGone;
 private:
 	ToolSelector m_chiselToolSlot;
 	ToolSelector m_brushToolSlot;
@@ -59,5 +61,7 @@ private:
 
 
 	std::shared_ptr<Sprite> m_bg;
+
+	bool lost = false;
 };
 

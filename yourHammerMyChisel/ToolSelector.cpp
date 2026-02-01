@@ -2,11 +2,36 @@
 #include "GamePlay.h"
 #include "Game.h"
 
+ToolSelector::ToolSelector() : body(t)
+{
+}
+
 void ToolSelector::Start(Tool t_toolType, sf::Vector2f t_startPos)
 {
 	m_NewToolType = t_toolType;
-	body.setSize(sf::Vector2f(150.f, 225.f));
-	body.setFillColor(sf::Color(0.f, 0.f, 0.f, 125.f));
+
+	std::string address = "";
+
+	switch (t_toolType)
+	{
+	case Tool::none:
+		break;
+	case Tool::Chisel:
+		address = "ASSETS\\IMAGES\\table_hammer.png";
+		break;
+	case Tool::Brush:
+		address = "ASSETS\\IMAGES\\table_feather.png";
+		break;
+	default:
+		break;
+	}
+	if (!t.loadFromFile(address))
+	{
+		std::cout << "ERROR: Can't load 'startbutton.png" << std::endl;
+	}
+	body.setTexture(t);
+	body.setTextureRect(sf::IntRect{ sf::Vector2i{0,0}, sf::Vector2i{static_cast<int>(t.getSize().x),static_cast<int>(t.getSize().y)}});
+	body.setScale(sf::Vector2f{ 4.0f,4.0f });
 	body.setPosition(t_startPos);
 	
 	

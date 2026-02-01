@@ -22,6 +22,7 @@
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="Book.cpp" />
     <ClCompile Include="Cursor.cpp" />
+    <ClCompile Include="LosingScreen.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="NPCController.cpp" />
     <ClCompile Include="ToolSelector.cpp" />
@@ -36,6 +37,7 @@
     <ClInclude Include="AnimatedSprite.h" />
     <ClInclude Include="Book.h" />
     <ClInclude Include="Cursor.h" />
+    <ClInclude Include="LosingScreen.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="NPCController.h" />
     <ClInclude Include="ToolSelector.h" />
