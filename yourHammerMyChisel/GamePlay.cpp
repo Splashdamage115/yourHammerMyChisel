@@ -8,6 +8,7 @@ bool GamePlay::pageOnTop = false;
 sf::RectangleShape GamePlay::m_npcBox;
 int GamePlay::currentEmotion = 0;
 AnimatedSprite GamePlay::anims;
+bool GamePlay::hammerGone = true;
 
 GamePlay::GamePlay() : tableSprite(tableTexture), standSprite(standTexture)
 {
@@ -51,8 +52,8 @@ void GamePlay::Start()
 	m_npcs.Start(0);
 	m_page.Start();
 	m_mask.Start(m_npcs);
-	m_brushToolSlot.Start(Tool::Brush, sf::Vector2f(1500.f, 0.f));
-	m_chiselToolSlot.Start(Tool::Chisel, sf::Vector2f(1700.f, 0.f));
+	m_brushToolSlot.Start(Tool::Brush, sf::Vector2f(1240.f, 70.f));
+	m_chiselToolSlot.Start(Tool::Chisel, sf::Vector2f(1550.f, 70.f));
 
 	overlay.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	overlay.setFillColor(sf::Color::Transparent);
@@ -107,7 +108,8 @@ void GamePlay::Update()
 	}
 	m_npcs.Update();
 	m_brushToolSlot.Update();
-	m_chiselToolSlot.Update();
+	if(!hammerGone)
+		m_chiselToolSlot.Update();
 }
 
 void GamePlay::Render(sf::RenderWindow& t_window)
@@ -115,7 +117,17 @@ void GamePlay::Render(sf::RenderWindow& t_window)
 	t_window.draw(m_bg->sprite);
 	m_npcs.Render(t_window);
 	t_window.draw(standSprite);
+	if (m_npcs.ToolsDropped)
+	{
+		t_window.draw(m_npcs.hammer);
+
+		t_window.draw(m_npcs.mask);
+	}
 	t_window.draw(tableSprite);
+
+	m_brushToolSlot.Render(t_window);
+	if (!hammerGone)
+		m_chiselToolSlot.Render(t_window);
 
 	//t_window.draw(m_npcBox);
 	if (pageOnTop)
@@ -128,8 +140,7 @@ void GamePlay::Render(sf::RenderWindow& t_window)
 		m_page.Render(t_window);
 		m_mask.Render(t_window);
 	}
-	m_brushToolSlot.Render(t_window);
-	m_chiselToolSlot.Render(t_window);
+
 
 
 	if (transitionNewDay)

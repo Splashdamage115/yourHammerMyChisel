@@ -33,6 +33,8 @@ public:
 	static sf::RectangleShape m_npcBox;
 	static int currentEmotion;
 	static AnimatedSprite anims;
+
+	static bool hammerGone;
 private:
 	ToolSelector m_chiselToolSlot;
 	ToolSelector m_brushToolSlot;

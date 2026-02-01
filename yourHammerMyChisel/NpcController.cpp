@@ -24,6 +24,24 @@ void Npc::init(Dialogue t_lines, int emotionNum, TextureType t_tex)
 
 NPCController::NPCController() : renderedText(Game::m_jerseyFont)
 {
+	if (!maskT.loadFromFile("./ASSETS/IMAGES/stand_mask1.png"))
+	{
+		DEBUG_MSG("couldnt load table");
+	}
+	mask.setTexture(maskT);
+	mask.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(maskT.getSize().x, maskT.getSize().y)));
+	mask.setPosition(sf::Vector2f(888.0f, 0.0f));
+	mask.setScale(sf::Vector2f(4.0f, 4.0f));
+
+
+	if (!hammerT.loadFromFile("./ASSETS/IMAGES/stand_hammer.png"))
+	{
+		DEBUG_MSG("couldnt load table");
+	}
+	hammer.setTexture(hammerT);
+	hammer.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(hammerT.getSize().x, hammerT.getSize().y)));
+	hammer.setPosition(sf::Vector2f(888.0f, 0.0f));
+	hammer.setScale(sf::Vector2f(4.0f, 4.0f));
 }
 
 void NPCController::Start(int t_day)
@@ -105,6 +123,12 @@ void NPCController::Update()
 
 			if (textPosition >= bufferedText.size())
 			{
+				if (m_todayNpcs.at(m_currentnpc).lines.currentPos == m_todayNpcs.at(m_currentnpc).lines.dialogue.size() - 1)
+				{
+					ToolsDropped = true;
+
+					mask.setPosition(sf::Vector2f(250.f, 700.f));
+				}
 				if (m_todayNpcs.at(m_currentnpc).lines.currentPos >= m_todayNpcs.at(m_currentnpc).lines.dialogue.size())
 				{
 					// end of dialogue
@@ -126,8 +150,10 @@ void NPCController::Update()
 		{
 			// ARRIVED AT STAND
 
-			bufferedText = m_todayNpcs.at(m_currentnpc).lines.dialogue.at(m_todayNpcs.at(m_currentnpc).lines.currentPos++);
 
+
+			bufferedText = m_todayNpcs.at(m_currentnpc).lines.dialogue.at(m_todayNpcs.at(m_currentnpc).lines.currentPos);
+			m_todayNpcs.at(m_currentnpc).lines.currentPos++;
 
 			waitingForNpc = false;
 			waitTillNextChar = TEXT_LETTER_DELAY;
@@ -145,11 +171,45 @@ void NPCController::Update()
 		}
 	}
 
+	if (ToolsDropped)
+	{
+		waitForSecondItemDrop -= Game::deltaTime;
+
+		if (waitForSecondItemDrop <= 0.0f)
+		{
+			if(!itemDropped)
+				hammer.setPosition(sf::Vector2f(450.f, 700.f));
+			itemDropped = true;
+		}
+		if (mask.getPosition().y < ITEM_DROP_Y)
+		{
+			mask.move(sf::Vector2f(0.0f, 200.0f * Game::deltaTime));
+		}
+		if (hammer.getPosition().y < ITEM_DROP_Y)
+		{
+			hammer.move(sf::Vector2f(0.0f, 200.0f * Game::deltaTime));
+		}
+	}
+
 	if (GamePlay::m_npcBox.getGlobalBounds().contains(Game::mousePosition))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && GamePlay::heldTool == Tool::none)
 		{
-			writeText = true;
+			if (ToolsDropped)
+			{
+				// retrieve tools here
+				mask.setPosition(sf::Vector2f(-2000.0f, -2000.0f));
+				hammer.setPosition(sf::Vector2f(-2000.0f, -2000.0f));
+				waitForSecondItemDrop = 0.5f;
+				ToolsDropped = false;
+				itemDropped = false;
+				pickedUpMask = true;
+				GamePlay::hammerGone = false;
+			}
+			else
+			{
+				writeText = true;
+			}
 		}
 	}
 }
@@ -171,6 +231,12 @@ void NPCController::Render(sf::RenderWindow& t_window)
 			}
 	}
 
+	//if (ToolsDropped)
+	//{
+	//	t_window.draw(hammer);
+	//	t_window.draw(mask);
+	//
+	//}
 }
 
 void NPCController::recieveMask()

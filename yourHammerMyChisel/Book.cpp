@@ -16,10 +16,14 @@ void Book::Start()
 
 		}
 	}
-
-	m_book.collisionBox.setSize(sf::Vector2f(PAGE_PIXEL_SIZE * PAGE_SIZE_X, PAGE_PIXEL_SIZE * PAGE_SIZE_Y));
-	m_book.collisionBox.setPosition(sf::Vector2f((PAGE_PIXEL_SIZE) + PAGE_START_X, (PAGE_PIXEL_SIZE) + PAGE_START_Y));
-	m_book.collisionBox.setFillColor(sf::Color::White);
+	if (!m_book.texture.loadFromFile("./ASSETS/IMAGES/paper.png"))
+	{
+		DEBUG_MSG("couldnt load table");
+	}
+	m_book.collisionBox.setTexture(m_book.texture);
+	m_book.collisionBox.setTextureRect(sf::IntRect(sf::Vector2i(), sf::Vector2i(m_book.texture.getSize().x, m_book.texture.getSize().y)));
+	m_book.collisionBox.setPosition(sf::Vector2f((PAGE_PIXEL_SIZE)+PAGE_START_X, (PAGE_PIXEL_SIZE)+PAGE_START_Y));
+	m_book.collisionBox.setScale(sf::Vector2f(4.0f, 4.0f));
 
 	m_book.shadow.setSize(sf::Vector2f(PAGE_PIXEL_SIZE * PAGE_SIZE_X, PAGE_PIXEL_SIZE * PAGE_SIZE_Y));
 	m_book.shadow.setPosition(sf::Vector2f((PAGE_PIXEL_SIZE)+PAGE_START_X + 12.f, (PAGE_PIXEL_SIZE)+PAGE_START_Y + 8.f));

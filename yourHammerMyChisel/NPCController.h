@@ -33,6 +33,12 @@ public:
 
 	int currentEmotionNum = 0;
 	sf::Text renderedText;
+	bool ToolsDropped = false;
+
+	bool pickedUpMask = false;
+
+	sf::Sprite mask{ maskT };
+	sf::Sprite hammer{ hammerT };
 private:
 	float waitTillNextChar = TEXT_LETTER_DELAY;
 	std::string currentText = "";
@@ -45,5 +51,12 @@ private:
 	bool writeText = false;
 
 	bool waitingForNpc = true;
+
+	float waitForSecondItemDrop = 0.5f;
+
+	sf::Texture maskT;
+	sf::Texture hammerT;
+
+	bool itemDropped = false;
 };
 

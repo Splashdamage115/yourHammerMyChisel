@@ -21,7 +21,7 @@
 #define MASK_PIXEL_SIZE 96.f
 #define MASK_PIXEL_OFFSET 0.f
 #define MASK_START_X 1200.f
-#define MASK_START_Y 450.f
+#define MASK_START_Y -1450.f
 #define MASK_SHADOW_OFFSET_X 8.f
 #define MASK_SHADOW_OFFSET_Y 6.f
 
@@ -31,10 +31,12 @@
 #define PAGE_SIZE_X 64
 #define PAGE_SIZE_Y 108
 #define PAGE_START_X 1200.f
-#define PAGE_START_Y 250.f
+#define PAGE_START_Y 600.f
 
 #define TEXT_LETTER_DELAY 0.05f
 
 #define MAX_DAYS 2
 
 #define FRAME_TIME 0.3f
+
+#define ITEM_DROP_Y 930.f
